@@ -16,6 +16,7 @@ sqlalchemy = {extras = ["asyncio"], version = "*"}
 disnake = "==2.3.0"
 pylint = "*"
 pydantic = "*"
+loguru = "*"
 
 [dev-packages]
 tox = "*"
