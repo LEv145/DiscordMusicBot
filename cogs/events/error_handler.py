@@ -1,9 +1,8 @@
 import traceback
+
 from disnake import ApplicationCommandInteraction
-
-from termcolor import cprint
-
 from disnake.ext import commands
+from loguru import logger
 
 
 class ErrorHandler(commands.Cog):
@@ -12,20 +11,19 @@ class ErrorHandler(commands.Cog):
 
     @commands.Cog.listener()
     async def on_error(self, event: str, *args, **kwargs):
-        error = traceback.format_exc()
-        cprint(f"{event}: {error}", "yellow", attrs=["bold"])
+        logger.exception(
+            f"Event: {event}\n"
+            f"Args: {args}\n"
+            f"Kwargs: {kwargs}"
+        )
 
     @commands.Cog.listener()
     async def on_command_error(
         self,
         _ctx: commands.Context,
-        error
+        error: commands.CommandError,
     ):
-        cprint(
-            self._format_command_exception(error),
-            color="red",
-            attrs=("bold",)
-        )
+        logger.error(error)
 
     @commands.Cog.listener()
     async def on_slash_command_error(
@@ -33,21 +31,11 @@ class ErrorHandler(commands.Cog):
         _inter: ApplicationCommandInteraction,
         error: commands.CommandError
     ):
-        cprint(
-            self._format_command_exception(error),
-            color="red",
-            attrs=("bold",)
-        )
+        logger.error(error)
 
     @commands.Cog.listener()
     async def on_command_completion(self, ctx: commands.Context):
         await ctx.message.add_reaction("\N{White Medium Star}")
-
-    def _format_command_exception(self, error: commands.CommandError) -> str:
-        error = getattr(error, "original", error)
-        return "".join(
-            traceback.format_exception(type(error), error, error.__traceback__)
-        )
 
 
 def setup(bot):

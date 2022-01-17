@@ -2,6 +2,7 @@ import os
 
 import disnake
 from disnake.ext import commands, tasks
+from loguru import logger
 
 
 class Bot(commands.InteractionBot):
@@ -15,7 +16,7 @@ class Bot(commands.InteractionBot):
         self._once = True
 
     async def on_ready(self):
-        print(f"We have logged in as {self.user}")
+        logger.info(f"We have logged in as {self.user}")
 
         if self._once:
             self._once = False
