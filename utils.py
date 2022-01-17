@@ -48,6 +48,7 @@ def format_optional_string(template: str, value: Optional[Any]) -> str:
     return template.format(value)
 
 
+# TODO: It's no utils
 class DefaultEmbed(Embed):
     def __init__(
         self,
@@ -68,6 +69,7 @@ class DefaultEmbed(Embed):
         )
 
 
+# TODO: It's no utils
 class InfoDefaultEmbed(DefaultEmbed):
     def __init__(
         self,
