@@ -9,7 +9,7 @@ from loguru import logger
 
 async def main():
     logger.add(sys.stdout)
-    logger.add("main.log", rotation="500 MB")
+    logger.add(Path("log/main.log"), rotation="500 MB")
 
     bot = Bot()
     bot.run()
