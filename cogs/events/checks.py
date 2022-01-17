@@ -1,5 +1,11 @@
-from bot import Bot
+from typing import (
+    TYPE_CHECKING,
+)
 from disnake.ext import commands
+
+
+if TYPE_CHECKING:
+    from bot import Bot
 
 
 class NoGuildCheck(commands.Cog):

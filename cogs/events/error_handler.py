@@ -1,13 +1,18 @@
-import traceback
+from typing import (
+    TYPE_CHECKING,
+)
 
 from disnake import ApplicationCommandInteraction
 from disnake.ext import commands
 from loguru import logger
 
+if TYPE_CHECKING:
+    from bot import Bot
+
 
 class ErrorHandler(commands.Cog):
     def __init__(self, bot):
-        self.bot: commands.AutoShardedBot = bot
+        self.bot: Bot = bot
 
     @commands.Cog.listener()
     async def on_error(self, event: str, *args, **kwargs):
