@@ -1,3 +1,5 @@
+"""Repositories."""
+
 from .abc_repository import (
     ABCGuildRepository,
     ABCMemberRepository,

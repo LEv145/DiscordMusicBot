@@ -1,3 +1,5 @@
+"""Abstract repositories."""
+
 from typing import TYPE_CHECKING
 from abc import ABC, abstractmethod
 

@@ -1,3 +1,5 @@
+"""ORM tables."""
+
 from sqlalchemy import (
     Table,
     MetaData,
