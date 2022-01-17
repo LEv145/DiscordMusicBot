@@ -16,7 +16,7 @@ import model
 
 metadata = MetaData()
 
-member = Table(
+member_table = Table(
     "member", metadata,
     Column("id", Integer, primary_key=True),
     Column("name", String(255)),
@@ -26,5 +26,5 @@ member = Table(
 def start_mappers():
     mapper(
         model.Member,
-        member,
+        member_table,
     )
