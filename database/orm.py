@@ -23,7 +23,7 @@ member_table = Table(
 )
 
 
-def start_mappers():
+def start_mappers() -> None:
     mapper(
         model.Member,
         member_table,
