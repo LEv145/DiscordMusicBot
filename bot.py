@@ -1,5 +1,3 @@
-import os
-
 import disnake
 from disnake.ext import commands, tasks
 from loguru import logger
@@ -13,13 +11,9 @@ class Bot(commands.InteractionBot):
             intents=disnake.Intents.all()
         )
         self.update_description.start()
-        self._once = True
 
     async def on_ready(self):
         logger.info(f"We have logged in as {self.user}")
-
-        if self._once:
-            self._once = False
 
     @tasks.loop(seconds=10)
     async def update_description(self):
