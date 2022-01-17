@@ -20,6 +20,7 @@ loguru = "*"
 
 [dev-packages]
 tox = "*"
+mypy = "*"
 
 [requires]
 python_version = "3.9"
