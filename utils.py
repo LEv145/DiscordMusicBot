@@ -53,7 +53,7 @@ class DefaultEmbed(Embed):
         self,
         *,
         title: "MaybeEmpty[Any]" = Embed.Empty,
-        type: "EmbedType" = "rich",
+        type_: "EmbedType" = "rich",
         url: "MaybeEmpty[Any]" = Embed.Empty,
         description: "MaybeEmpty[Any]" = Embed.Empty,
         timestamp: datetime = None
@@ -61,7 +61,7 @@ class DefaultEmbed(Embed):
         super().__init__(
             color=0xDD2828,
             title=title,
-            type=type,
+            type=type_,
             url=url,
             description=description,
             timestamp=timestamp,
