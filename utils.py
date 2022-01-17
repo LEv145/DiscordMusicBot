@@ -14,7 +14,7 @@ class DeltatimeTemplate(Template):
     delimiter = "%"
 
 
-def strdelta(delta: timedelta, format_string: str):
+def strdelta(delta: timedelta, format_string: str) -> str:
     data = {}
     data["H"], remains = divmod(delta.seconds, 3600)
     data["M"], data["S"] = divmod(remains, 60)
