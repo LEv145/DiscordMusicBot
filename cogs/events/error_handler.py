@@ -1,4 +1,5 @@
 from typing import (
+    Any,
     TYPE_CHECKING,
 )
 
@@ -11,11 +12,16 @@ if TYPE_CHECKING:
 
 
 class ErrorHandler(commands.Cog):
-    def __init__(self, bot):
-        self.bot: Bot = bot
+    def __init__(self, bot: Bot) -> None:
+        self.bot = bot
 
     @commands.Cog.listener()
-    async def on_error(self, event: str, *args, **kwargs):
+    async def on_error(
+        self,
+        event: str,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
         logger.exception(
             f"Event: {event}\n"
             f"Args: {args}\n"
@@ -27,21 +33,21 @@ class ErrorHandler(commands.Cog):
         self,
         _ctx: commands.Context,
         error: commands.CommandError,
-    ):
+    ) -> None:
         logger.error(error)
 
     @commands.Cog.listener()
     async def on_slash_command_error(
         self,
         _inter: ApplicationCommandInteraction,
-        error: commands.CommandError
-    ):
+        error: commands.CommandError,
+    ) -> None:
         logger.error(error)
 
     @commands.Cog.listener()
-    async def on_command_completion(self, ctx: commands.Context):
+    async def on_command_completion(self, ctx: commands.Context) -> None:
         await ctx.message.add_reaction("\N{White Medium Star}")
 
 
-def setup(bot):
+def setup(bot: Bot) -> None:
     bot.add_cog(ErrorHandler(bot))
