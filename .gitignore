@@ -2,7 +2,7 @@
 modules
 
 # Config
-config.py
+config.toml
 
 # IDEA
 .idea
