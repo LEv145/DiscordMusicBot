@@ -22,6 +22,8 @@ loguru = "*"
 tox = "*"
 mypy = "*"
 pylint = "*"
+mkinit = "*"
+black = "*"
 
 [requires]
 python_version = "3.9"
