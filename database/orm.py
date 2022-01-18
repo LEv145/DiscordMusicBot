@@ -11,7 +11,7 @@ from sqlalchemy.types import (
 )
 from sqlalchemy.orm import mapper
 
-import model
+import models
 
 
 metadata = MetaData()

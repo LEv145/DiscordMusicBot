@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 
 
 if TYPE_CHECKING:
-    from .model import (
+    from .models import (
         Guild,
         Member,
         Lang,

@@ -5,7 +5,7 @@ from .abc_repository import (
     ABCMemberRepository,
 )
 
-from .model import (
+from .models import (
     Member,
     Guild,
     Lang,
