@@ -18,6 +18,7 @@ pylint = "*"
 pydantic = "*"
 loguru = "*"
 toml = "*"
+poethepoet = "*"
 
 [dev-packages]
 tox = "*"
@@ -31,6 +32,3 @@ python_version = "3.9"
 
 [pipenv]
 allow_prereleases = true
-
-[scripts]
-mkinit = "mkinit --black --nomods --relative -w"
