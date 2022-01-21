@@ -1,16 +1,20 @@
 from pathlib import Path
-import asyncio
 
-from bot import Bot
+from config import BOT_TOKEN
 
+import hikari
+from lightbulb import BotApp
 from loguru import logger
 
 
-async def main() -> None:
-    logger.add(Path("log/main.log"), rotation="500 MB")
+logger.add(Path("log/main.log"), rotation="500 MB")
 
-    bot = Bot()
-    bot.run()
+bot = BotApp(token=BOT_TOKEN)
 
 
-asyncio.run(main())
+@bot.listen(hikari.ShardReadyEvent)
+async def on_ready(event: hikari.ShardReadyEvent) -> None:
+    logger.info(f"We have logged in as {event.my_user}")
+
+
+bot.run()
