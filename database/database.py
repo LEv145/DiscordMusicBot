@@ -1,20 +1,26 @@
+"""Database management."""
+
 from orm import start_mappers
 
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker
 
 
 class Database():
-    def __init__(self, url: str):
-        session_factory = sessionmaker(
-            bind=create_async_engine(url),
-            class_=AsyncSession,
-        )
-        self.session = scoped_session(session_factory())
+    """Class for database management."""
 
-    async def init(self):
+    def __init__(self, url: str) -> None:
         start_mappers()
 
-    async def close(self):
-        await self.session.session_factory.close()
+        self.engine = create_async_engine(url)
+
+        base_session_factory = sessionmaker(
+            bind=self.engine,
+            class_=AsyncSession,
+        )
+
+        self.session: AsyncSession = base_session_factory()
+
+    async def close(self) -> None:
+        await self.session.close()
 

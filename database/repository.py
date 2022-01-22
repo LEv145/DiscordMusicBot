@@ -1,9 +1,11 @@
+"""Repositories."""
+
 from .abc_repository import (
     ABCGuildRepository,
     ABCMemberRepository,
 )
 
-from .model import (
+from .models import (
     Member,
     Guild,
     Lang,

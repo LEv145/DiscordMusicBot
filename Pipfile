@@ -4,27 +4,22 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-aiohttp = "==3.7.4.post0"
 asyncpg = "==0.23.0"
-beautifulsoup4 = "==4.9.3"
-cchardet = "==2.1.7"
-certifi = "==2020.12.5"
-cffi = "==1.14.6"
-chardet = "==4.0.0"
-colorful = "==0.5.4"
-youtube-dl = "*"
-hikari = "*"
-wavelink = "*"
-tortoise-orm = "*"
 sqlalchemy = {extras = ["asyncio"], version = "*"}
-repka = "*"
-disnake = "==2.3.0"
+pylint = "*"
+pydantic = "*"
+loguru = "*"
+toml = "*"
+poethepoet = "*"
+hikari-lightbulb = "*"
+hikari = "*"
 
 [dev-packages]
-vk-api = "*"
-requests = "*"
-ffmpeg-python = "*"
-"discord.py" = "*"
+tox = "*"
+mypy = "*"
+pylint = "*"
+mkinit = "*"
+black = "*"
 
 [requires]
 python_version = "3.9"

@@ -1,3 +1,5 @@
+"""ORM tables."""
+
 from sqlalchemy import (
     Table,
     MetaData,
@@ -9,20 +11,20 @@ from sqlalchemy.types import (
 )
 from sqlalchemy.orm import mapper
 
-import model
+import models
 
 
 metadata = MetaData()
 
-member = Table(
+member_table = Table(
     "member", metadata,
     Column("id", Integer, primary_key=True),
     Column("name", String(255)),
 )
 
 
-def start_mappers():
+def start_mappers() -> None:
     mapper(
         model.Member,
-        member,
+        member_table,
     )
