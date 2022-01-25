@@ -147,14 +147,6 @@
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
             "version": "==21.4.0"
         },
-        "beautifulsoup4": {
-            "hashes": [
-                "sha256:9a315ce70049920ea4572a4055bc4bd700c940521d36fc858205ad4fcde149bf",
-                "sha256:c23ad23c521d818955a4151a67d81580319d4bf548d3d49f4223ae041ff98891"
-            ],
-            "markers": "python_version >= '3.1'",
-            "version": "==4.10.0"
-        },
         "black": {
             "hashes": [
                 "sha256:77b80f693a569e2e527958459634f18df9b0ba2625ba4e0c2d5da5be42e6f2b3",
@@ -162,12 +154,6 @@
             ],
             "markers": "python_full_version >= '3.6.2'",
             "version": "==21.12b0"
-        },
-        "bs4": {
-            "hashes": [
-                "sha256:36ecea1fd7cc5c0c6e4a1ff075df26d50da647b75376626cc186e2212886dd3a"
-            ],
-            "version": "==0.0.1"
         },
         "certifi": {
             "hashes": [
@@ -189,7 +175,7 @@
                 "sha256:876d180e9d7432c5d1dfd4c5d26b72f099d503e8fcc0feb7532c9289be60fcbd",
                 "sha256:cb957888737fc0bbcd78e3df769addb41fd1ff8cf950dc9e7ad7793f1bf44455"
             ],
-            "markers": "python_version >= '3.5'",
+            "markers": "python_full_version >= '3.5.0'",
             "version": "==2.0.10"
         },
         "click": {
@@ -506,14 +492,14 @@
         },
         "music-source": {
             "git": "https://github.com/LEv145/music_source.git",
-            "ref": "3f76a9ce2e82f392a000e06df2fffe206b87dcef"
+            "ref": "9a4ee49b3229bd4afbfce7bdbe2ffc9b32be0179"
         },
         "mutagen": {
             "hashes": [
                 "sha256:6397602efb3c2d7baebd2166ed85731ae1c1d475abca22090b7141ff5034b3e1",
                 "sha256:9c9f243fcec7f410f138cb12c21c84c64fde4195481a30c9bfb05b5f003adfed"
             ],
-            "markers": "python_version >= '3.5' and python_version < '4'",
+            "markers": "python_version < '4' and python_full_version >= '3.5.0'",
             "version": "==1.45.1"
         },
         "mypy-extensions": {
@@ -527,7 +513,7 @@
             "hashes": [
                 "sha256:ba93b2df055bca202116ec44b9bead3df33ea63a7d5827ff8e16738b97f33a95"
             ],
-            "markers": "python_version >= '3.5'",
+            "markers": "python_full_version >= '3.5.0'",
             "version": "==4.0.2"
         },
         "pastel": {
@@ -684,14 +670,6 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.16.0"
-        },
-        "soupsieve": {
-            "hashes": [
-                "sha256:1a3cca2617c6b38c0343ed661b1fa5de5637f257d4fe22bd9f1338010a1efefb",
-                "sha256:b8d49b1cd4f037c7082a9683dfa1801aa2597fb11c3a1155b7a5b94829b4f1f9"
-            ],
-            "markers": "python_version >= '3.6'",
-            "version": "==2.3.1"
         },
         "sqlalchemy": {
             "extras": [
@@ -940,11 +918,11 @@
         },
         "yt-dlp": {
             "hashes": [
-                "sha256:2244df3759751487e796b23b67216bee98e70832a3a43c2526b0b0e0bbfbcb5b",
-                "sha256:bb46898a175d149c9c6bb2846056590d297aa4eafad8487c3e1315d2c6090896"
+                "sha256:182903b78a4645edd504dcd9f2603f76f9fdaf8bd279fd45d01992f7637b6d8a",
+                "sha256:220ec407389b5ea72e25dfc11c30e543489b90075c55311d5255e2045db8a9e2"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==2021.12.27"
+            "version": "==2022.1.21"
         }
     },
     "develop": {
@@ -1114,7 +1092,7 @@
             "hashes": [
                 "sha256:ba93b2df055bca202116ec44b9bead3df33ea63a7d5827ff8e16738b97f33a95"
             ],
-            "markers": "python_version >= '3.5'",
+            "markers": "python_full_version >= '3.5.0'",
             "version": "==4.0.2"
         },
         "packaging": {
