@@ -13,6 +13,8 @@ toml = "*"
 poethepoet = "*"
 hikari-lightbulb = "*"
 hikari = "*"
+setuptools = "*"
+music-source = {git = "https://github.com/LEv145/music_source.git"}
 
 [dev-packages]
 tox = "*"
