@@ -8,7 +8,7 @@ from typing import (
 from enum import Enum
 from datetime import date, datetime
 
-from pydantic import BaseModel
+from dataclasses import dataclass
 
 
 class Lang(Enum):
@@ -20,19 +20,21 @@ class SearchService(Enum):
     spotify = "spotify"
 
 
-class Guild(BaseModel):
+@dataclass
+class Guild():
     id: int
     lang: Lang = Lang.eng
 
 
-class Track(BaseModel):
+@dataclass
+class Track():
     created_at: datetime
     url: str
 
 
-class Member(BaseModel):
+@dataclass
+class Member():
     id: int
-    tracks_queue: list[Track]
-    search_service: SearchService
-    premium_date_activate: Optional[date]
+    search_service: SearchService = SearchService.spotify
+    premium_date_activate: Optional[date] = None
 

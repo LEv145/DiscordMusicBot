@@ -1,10 +1,10 @@
 """Repositories."""
-# TODO: Tests
 
-from sqlalchemy.engine import ChunkedIteratorResult
-from sqlalchemy.ext.asyncio import AsyncSession
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from sqlalchemy.sql import (
-    Select,
     select as sql_select,
 )
 
@@ -17,6 +17,9 @@ from .models import (
     Guild,
 )
 
+if TYPE_CHECKING:
+    from sqlalchemy.ext.asyncio import AsyncSession
+
 
 class GuildRepository(ABCGuildRepository):
     def __init__(self, session: AsyncSession):
@@ -24,15 +27,14 @@ class GuildRepository(ABCGuildRepository):
 
     async def add(self, guild: Guild) -> None:
         """Add guild to DB."""
-        self._session.session.add(guild)
+        await self._session.add(guild)
 
     async def get(self, guild_id: int) -> Guild:
         """Get guild from DB."""
-        select: Select = sql_select(Guild)
-
-        result: ChunkedIteratorResult = await self._session.execute(
-            select.where(Guild.id == guild_id)
+        result = await self._session.execute(
+            sql_select(Guild).where(Guild.id == guild_id)
         )
+
         scalar: Guild = result.scalar()
 
         return scalar
@@ -44,7 +46,7 @@ class MemberRepository(ABCMemberRepository):
 
     async def add(self, member: Member) -> None:
         """Add member to DB."""
-        self._session.session.add(member)
+        self._session.add(member)
 
     async def get(self, member_id: int) -> Member:
         """Get member from DB."""

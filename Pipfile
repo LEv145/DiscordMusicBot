@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 asyncpg = "==0.23.0"
-sqlalchemy = {extras = ["asyncio"], version = "*"}
+sqlalchemy = {extras = ["mypy", "asyncio"], version = "*"}
 pylint = "*"
 pydantic = "*"
 loguru = "*"
@@ -16,6 +16,7 @@ hikari = "*"
 setuptools = "*"
 music-source = {git = "https://github.com/LEv145/music_source.git"}
 songbird-py = "*"
+sqlalchemy2-stubs = "*"
 
 [dev-packages]
 tox = "*"
@@ -23,6 +24,7 @@ mypy = "*"
 pylint = "*"
 mkinit = "*"
 black = "*"
+aiosqlite = "*"
 
 [requires]
 python_version = "3.9"
