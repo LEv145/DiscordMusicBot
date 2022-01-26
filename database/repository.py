@@ -3,7 +3,7 @@
 
 from sqlalchemy.engine import ChunkedIteratorResult
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import (
+from sqlalchemy.sql import (
     Select,
     select as sql_select,
 )
@@ -12,7 +12,6 @@ from .abc_repository import (
     ABCGuildRepository,
     ABCMemberRepository,
 )
-
 from .models import (
     Member,
     Guild,
@@ -49,9 +48,9 @@ class MemberRepository(ABCMemberRepository):
 
     async def get(self, member_id: int) -> Member:
         """Get member from DB."""
-        select: Select = sql_select(Guild)
+        select = sql_select(Guild)
 
-        result: ChunkedIteratorResult = await self._session.execute(
+        result = await self._session.execute(
             select.where(Member.id == member_id)
         )
         scalar: Member = result.scalar()

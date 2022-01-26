@@ -11,9 +11,18 @@ from datetime import date, datetime
 from pydantic import BaseModel
 
 
+class Lang(Enum):
+    rus = "rus"
+    eng = "eng"
+
+
+class SearchService(Enum):
+    spotify = "spotify"
+
+
 class Guild(BaseModel):
     id: int
-    lang: Lang
+    lang: Lang = Lang.eng
 
 
 class Track(BaseModel):
@@ -27,11 +36,3 @@ class Member(BaseModel):
     search_service: SearchService
     premium_date_activate: Optional[date]
 
-
-class Lang(Enum):
-    rus = "rus"
-    eng = "eng"
-
-
-class SearchService(Enum):
-    spotify = "spotify"
