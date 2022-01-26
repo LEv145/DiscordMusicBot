@@ -30,17 +30,23 @@ class TestRepositories(IsolatedAsyncioTestCase):
         self.session: AsyncSession = sessionmaker(bind=engine, class_=AsyncSession)()
 
     async def asyncTearDown(self) -> None:
+        clear_mappers()
         await self.session.close()
 
-    async def test_guild_add(self) -> None:
+    async def test_member_repository(self) -> None:
         repository = MemberRepository(self.session)
 
-        member = Member(id=501089151089770517)
-        await repository.add(Member(id=501089151089770517))
+        member_id = 501089151089770517
+        base_member = Member(id=member_id)
 
-        sql_result = await self.session.execute(
-            sql_select(Member).where(Member.id == 501089151089770517)
-        )
+        # Test add
+        await repository.add(base_member)
 
-        self.assertEqual(member, sql_result.scalar())
+        sql_result = await self.session.execute(sql_select(Member))
 
+        self.assertEqual(base_member, sql_result.scalar())
+
+        # Test get
+        member = await repository.get(member_id)
+
+        self.assertEqual(base_member, member)

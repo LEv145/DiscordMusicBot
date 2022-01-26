@@ -50,7 +50,7 @@ class MemberRepository(ABCMemberRepository):
 
     async def get(self, member_id: int) -> Member:
         """Get member from DB."""
-        select = sql_select(Guild)
+        select = sql_select(Member)
 
         result = await self._session.execute(
             select.where(Member.id == member_id)

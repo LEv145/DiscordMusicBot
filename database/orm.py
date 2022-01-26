@@ -26,5 +26,5 @@ member_table = Table(
 )
 
 
-def start_mappers() -> None:  # TODO: Check mappers is running
+def start_mappers() -> None:
     mapper(Member, member_table)
