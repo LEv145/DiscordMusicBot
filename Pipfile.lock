@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2800a882c25cdc8f6c148ee32db3471090b38f2d5aebf9fbc3cf521d35b34737"
+            "sha256": "66ee829d507cf6a3b5b682b230f50e5f0d4b5b2daba77aecee338a1e224fdbc8"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -343,7 +343,7 @@
                 "sha256:6f62d78e2f89b4500b080fe3a81690850cd254227f27f75c3a0c491a1f351ba7",
                 "sha256:e8443a5e7a020e9d7f97f1d7d9cd17c88bcb3bc7e218bf9cf5095fe550be2951"
             ],
-            "markers": "python_version < '4' and python_full_version >= '3.6.1'",
+            "markers": "python_version < '4.0' and python_full_version >= '3.6.1'",
             "version": "==5.10.1"
         },
         "lazy-object-proxy": {
@@ -499,7 +499,7 @@
                 "sha256:6397602efb3c2d7baebd2166ed85731ae1c1d475abca22090b7141ff5034b3e1",
                 "sha256:9c9f243fcec7f410f138cb12c21c84c64fde4195481a30c9bfb05b5f003adfed"
             ],
-            "markers": "python_version < '4' and python_full_version >= '3.5.0'",
+            "markers": "python_version < '4.0' and python_full_version >= '3.5.0'",
             "version": "==1.45.1"
         },
         "mypy-extensions": {
@@ -671,6 +671,19 @@
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.16.0"
         },
+        "songbird-py": {
+            "hashes": [
+                "sha256:0f3ea8ab0dbbc38a21fc3984c3a9438b9f308f3750e91638a0f88f647e183fb2",
+                "sha256:18e552c6ab2f614f153ca8105964917089ab44eeec63cfbdb8ef3aa9a860def9",
+                "sha256:3fbb0cd5eb1c44be55382c92f18229181b274e19dcc4d7c51cc29e0ebac848bb",
+                "sha256:447b5ea0338604c70e8a9a5533df9683438854d6202332b9b1d70d24d711b8d5",
+                "sha256:5d0491003db90d95e642bc92c7ca6b403d7eea8a07e8b46bbcdb13a84c346011",
+                "sha256:9df035880c25f99d5df1fdf46caa910def385ab5a9370dbcc016be2982c53889",
+                "sha256:f173702aa51c6604409807df3c14deca406dcb0ed58b3e7b38419efdb8a7ccd0"
+            ],
+            "index": "pypi",
+            "version": "==0.1.0"
+        },
         "sqlalchemy": {
             "extras": [
                 "asyncio"
@@ -754,7 +767,7 @@
                 "sha256:1b465e494e3e0d8939b50680403e3aedaa2bc434b7d5af64dfd3c958d7f5ae80",
                 "sha256:de3eedaad74a2683334e282005cd8d7f22f4d55fa690a2a1020a416cb0a47e73"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4.0'",
             "version": "==1.26.3"
         },
         "vk-api": {
@@ -994,7 +1007,7 @@
                 "sha256:6f62d78e2f89b4500b080fe3a81690850cd254227f27f75c3a0c491a1f351ba7",
                 "sha256:e8443a5e7a020e9d7f97f1d7d9cd17c88bcb3bc7e218bf9cf5095fe550be2951"
             ],
-            "markers": "python_version < '4' and python_full_version >= '3.6.1'",
+            "markers": "python_version < '4.0' and python_full_version >= '3.6.1'",
             "version": "==5.10.1"
         },
         "lazy-object-proxy": {

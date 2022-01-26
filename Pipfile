@@ -15,6 +15,7 @@ hikari-lightbulb = "*"
 hikari = "*"
 setuptools = "*"
 music-source = {git = "https://github.com/LEv145/music_source.git"}
+songbird-py = "*"
 
 [dev-packages]
 tox = "*"
