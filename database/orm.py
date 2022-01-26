@@ -23,8 +23,8 @@ member_table = Table(
 )
 
 
-def start_mappers() -> None:
+def start_mappers() -> None:  # TODO: Check mappers is running
     mapper(
-        model.Member,
+        models.Member,
         member_table,
     )

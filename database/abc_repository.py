@@ -8,7 +8,6 @@ if TYPE_CHECKING:
     from .models import (
         Guild,
         Member,
-        Lang,
     )
 
 
@@ -20,10 +19,6 @@ class ABCGuildRepository(ABC):
     @abstractmethod
     async def get(self, guild_id: int) -> Guild:
         """Get guild from DB."""
-
-    @abstractmethod
-    async def set_lang(self, lang: Lang) -> None:
-        """Set guild lang."""
 
 
 class ABCMemberRepository(ABC):
