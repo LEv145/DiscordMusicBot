@@ -1,11 +1,11 @@
 import sys
 from pathlib import Path
 
-from config import BOT_TOKEN
-from bot import BaseBot
-
 from hikari import Intents
 from loguru import logger
+
+from config import BOT_TOKEN
+from bot import BaseBot
 
 
 EXTENSIONS = (
