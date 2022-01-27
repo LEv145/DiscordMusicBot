@@ -6,6 +6,8 @@ from typing import (
 
 import lightbulb
 
+from utils.discord import DefaultEmbed
+
 
 if TYPE_CHECKING:
     from bot import BaseBot
@@ -18,7 +20,9 @@ plugin = lightbulb.Plugin("Test")  # TODO: Rename
 @lightbulb.command(name="ping", description="Ping!")
 @lightbulb.implements(lightbulb.SlashCommand)
 async def ping(ctx: lightbulb.Context) -> None:
-    await ctx.respond("Pong<3 ~~")
+    await ctx.respond(
+        DefaultEmbed(title="Pong (;ﾞ°´ω°´)")
+    )
 
 
 def load(bot: BaseBot) -> None:
