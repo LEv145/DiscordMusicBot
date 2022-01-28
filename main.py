@@ -1,4 +1,3 @@
-import sys
 from pathlib import Path
 
 from hikari import Intents
@@ -15,7 +14,6 @@ EXTENSIONS = (
 logger.add(Path("log/main.log"), rotation="500 MB")
 
 
-sys.path.append('/static')
 bot = BaseBot(
     token=BOT_TOKEN,
     owner_ids=(501089151089770517,),
