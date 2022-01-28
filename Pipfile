@@ -18,6 +18,7 @@ music-source = {git = "https://github.com/LEv145/music_source.git"}
 songbird-py = "*"
 sqlalchemy2-stubs = "*"
 hikari-musicbot-banner = {git = "https://github.com/LEv145/Hikari-music-bot-banner"}
+lightbulb-ext-filament = "*"
 
 [dev-packages]
 tox = "*"

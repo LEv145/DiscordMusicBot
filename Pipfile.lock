@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "89aef29c9ce1436d07c1263ae0dd26426a59d59f064d6e1ffb6fb116715c5b8d"
+            "sha256": "b362079d1df407768163960c5bfa21db477e38b3d6d39e0df9017df7160e2d1e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -175,7 +175,7 @@
                 "sha256:876d180e9d7432c5d1dfd4c5d26b72f099d503e8fcc0feb7532c9289be60fcbd",
                 "sha256:cb957888737fc0bbcd78e3df769addb41fd1ff8cf950dc9e7ad7793f1bf44455"
             ],
-            "markers": "python_version >= '3.5'",
+            "markers": "python_full_version >= '3.5.0'",
             "version": "==2.0.10"
         },
         "click": {
@@ -393,6 +393,14 @@
             "markers": "python_version >= '3.6'",
             "version": "==1.7.1"
         },
+        "lightbulb-ext-filament": {
+            "hashes": [
+                "sha256:270bc647310512c9a70d1faa9a122ded6b545f4dfe21be601f167a5b44ba0507",
+                "sha256:5845d78aa191f27cd6f15d8f1a4402dd41b630a8135688ddc6d8a782fb7a8a01"
+            ],
+            "index": "pypi",
+            "version": "==0.1.2"
+        },
         "loguru": {
             "hashes": [
                 "sha256:b28e72ac7a98be3d28ad28570299a393dfcd32e5e3f6a353dec94675767b6319",
@@ -503,7 +511,7 @@
                 "sha256:6397602efb3c2d7baebd2166ed85731ae1c1d475abca22090b7141ff5034b3e1",
                 "sha256:9c9f243fcec7f410f138cb12c21c84c64fde4195481a30c9bfb05b5f003adfed"
             ],
-            "markers": "python_version >= '3.5' and python_version < '4'",
+            "markers": "python_version < '4' and python_full_version >= '3.5.0'",
             "version": "==1.45.1"
         },
         "mypy": {
@@ -537,6 +545,14 @@
                 "sha256:2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"
             ],
             "version": "==0.4.3"
+        },
+        "nusex": {
+            "hashes": [
+                "sha256:6c6480a2414117ea2075ad6ae0aa486273799fef1624f5a4368dab68c11d4361",
+                "sha256:9e7b6d52577066313413d7cbec6cda6abbef2c9e641d01426e5449a2a36508b8"
+            ],
+            "markers": "python_version < '3.12' and python_version >= '3.6'",
+            "version": "==1.2.4"
         },
         "ordered-set": {
             "hashes": [
