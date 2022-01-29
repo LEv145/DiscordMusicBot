@@ -46,7 +46,7 @@ async def search_track(ctx: lightbulb.Context, query: str) -> None:
 
         track_result = await client.get_song_by_url(suggestion.url)
         await ctx.respond(
-            DefaultEmbed(description="\n\n".join(track_result.lyrics)),
+            DefaultEmbed(description="```" + "\n\n".join(track_result.lyrics) + "```"),
         )
 
 
