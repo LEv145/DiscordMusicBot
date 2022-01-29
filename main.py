@@ -9,7 +9,7 @@ from bot import BaseBot
 
 
 EXTENSIONS = (
-    "extensions.commands.test_extension",
+    "extensions.commands.misc_extension",
     "extensions.commands.music_extension",
 )
 

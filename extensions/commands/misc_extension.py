@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from bot import BaseBot
 
 
-plugin = lightbulb.Plugin("Test")  # TODO: Rename
+plugin = lightbulb.Plugin("Misc")
 
 
 @plugin.command()
@@ -21,7 +21,12 @@ plugin = lightbulb.Plugin("Test")  # TODO: Rename
 @lightbulb.implements(lightbulb.SlashCommand)
 async def ping(ctx: lightbulb.Context) -> None:
     await ctx.respond(
-        DefaultEmbed(title="Pong (;ﾞ°´ω°´)")
+        DefaultEmbed(
+            title="\N{Table Tennis Paddle and Ball} Pong!",
+            description=(
+                f"Latency: `{round(ctx.app.heartbeat_latency * 1000, 2)}ms`"
+            ),
+        )
     )
 
 
