@@ -23,8 +23,8 @@ if TYPE_CHECKING:
 plugin = lightbulb.Plugin("Music")
 
 
-@lightbulb.option("query", "Text for search")
 @plugin.command()
+@lightbulb.option("query", "Text for search")
 @lightbulb.command(name="search_track", description="Search track")
 @lightbulb.implements(lightbulb.SlashCommand)
 @filament.utils.pass_options  # type: ignore
