@@ -41,7 +41,7 @@ async def search_track(ctx: lightbulb.Context, query: str) -> None:
         try:
             suggestion = next(suggestions)
         except StopIteration:
-            await ctx.respond(DefaultEmbed(description="No found"))
+            await ctx.respond(DefaultEmbed(description="`No found`"))
             return
 
         track_result = await client.get_song_by_url(suggestion.url)
