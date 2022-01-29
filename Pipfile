@@ -12,13 +12,15 @@ loguru = "*"
 toml = "*"
 poethepoet = "*"
 hikari-lightbulb = "*"
-hikari = "*"
+hikari = {extras = ["speedups"], version = "*"}
 setuptools = "*"
 music-source = {git = "https://github.com/LEv145/music_source.git"}
 songbird-py = "*"
 sqlalchemy2-stubs = "*"
 hikari-musicbot-banner = {git = "https://github.com/LEv145/Hikari-music-bot-banner"}
 lightbulb-ext-filament = "*"
+"lyricstranslate.py" = {git = "https://github.com/LEv145/lyricstranslate.py"}
+uvloop = "*"
 
 [dev-packages]
 tox = "*"

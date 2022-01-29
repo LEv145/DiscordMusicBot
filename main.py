@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from hikari import Intents
@@ -9,6 +10,7 @@ from bot import BaseBot
 
 EXTENSIONS = (
     "extensions.commands.test_extension",
+    "extensions.commands.music_extension",
 )
 
 logger.add(Path("log/main.log"), rotation="500 MB")
@@ -25,6 +27,11 @@ bot = BaseBot(
 
 for extension in EXTENSIONS:
     bot.load_extensions(extension)
+
+
+if os.name != "nt":
+    import uvloop
+    uvloop.install()
 
 
 bot.run()
