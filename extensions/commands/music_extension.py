@@ -24,11 +24,11 @@ plugin = lightbulb.Plugin("Music")
 
 
 @plugin.command()
-@lightbulb.option("query", "Text for search")
+@lightbulb.option("query", "Query for search")
 @lightbulb.command(name="search_track", description="Search track")
 @lightbulb.implements(lightbulb.SlashCommand)
 @filament.utils.pass_options  # type: ignore
-async def search_track(ctx: lightbulb.Context, query: str) -> None:
+async def command_search_track(ctx: lightbulb.Context, query: str) -> None:
     injector = Injector(LyricsTranslateModule)
     client_ = injector.get(LyricsTranslateClient)
 

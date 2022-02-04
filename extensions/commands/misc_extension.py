@@ -19,7 +19,7 @@ plugin = lightbulb.Plugin("Misc")
 @plugin.command()
 @lightbulb.command(name="ping", description="Ping!")
 @lightbulb.implements(lightbulb.SlashCommand)
-async def ping(ctx: lightbulb.Context) -> None:
+async def command_ping(ctx: lightbulb.Context) -> None:
     await ctx.respond(
         DefaultEmbed(
             title="\N{Table Tennis Paddle and Ball} Pong!",
