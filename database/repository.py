@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy.sql import (
     select as sql_select,
 )
+from sqlalchemy.orm import Session
 
 from .abc_repository import (
     ABCGuildRepository,
@@ -41,7 +42,7 @@ class GuildRepository(ABCGuildRepository):
 
 
 class MemberRepository(ABCMemberRepository):
-    def __init__(self, session: AsyncSession):
+    def __init__(self, session: Session):
         self._session = session
 
     async def add(self, member: Member) -> None:
@@ -52,7 +53,7 @@ class MemberRepository(ABCMemberRepository):
         """Get member from DB."""
         select = sql_select(Member)
 
-        result = await self._session.execute(
+        result = self._session.execute(
             select.where(Member.id == member_id)
         )
         scalar: Member = result.scalar()

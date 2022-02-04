@@ -1,15 +1,10 @@
-"""Database initialization"""
-
-from typing import Final
-
-from config import DATABASE_URL
-from database import start_mappers
+from orm import start_mappers
 
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
 
-class _Database():
+class DatabaseManager():
     """Class for database management."""
 
     def __init__(self, url: str) -> None:
@@ -26,6 +21,3 @@ class _Database():
 
     async def close(self) -> None:
         await self.session.close()
-
-
-database: Final = _Database(url=DATABASE_URL)
