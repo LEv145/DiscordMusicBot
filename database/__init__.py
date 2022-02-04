@@ -1,6 +1,6 @@
-from .database import Database
+from .database_manager import DatabaseManager
 
 
-__all__ = (
-    "Database",
-)
+__all__ = [
+    "DatabaseManager",
+]

@@ -1,12 +1,10 @@
-"""Database management."""
-
 from orm import start_mappers
 
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
 
-class Database():
+class DatabaseManager():
     """Class for database management."""
 
     def __init__(self, url: str) -> None:
@@ -23,4 +21,3 @@ class Database():
 
     async def close(self) -> None:
         await self.session.close()
-

@@ -11,7 +11,10 @@ from sqlalchemy.types import (
 )
 from sqlalchemy.orm import mapper
 
-import models
+from .models import (
+    Member,
+    Guild,
+)
 
 
 metadata = MetaData()
@@ -24,7 +27,4 @@ member_table = Table(
 
 
 def start_mappers() -> None:
-    mapper(
-        model.Member,
-        member_table,
-    )
+    mapper(Member, member_table)
