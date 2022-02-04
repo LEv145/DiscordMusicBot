@@ -23,9 +23,7 @@ async def ping(ctx: lightbulb.Context) -> None:
     await ctx.respond(
         DefaultEmbed(
             title="\N{Table Tennis Paddle and Ball} Pong!",
-            description=(
-                f"Latency: `{round(ctx.app.heartbeat_latency * 1000, 2)}ms`"
-            ),
+            description=f"Latency: `{round(ctx.app.heartbeat_latency * 1000, 2)}ms`",
         )
     )
 
