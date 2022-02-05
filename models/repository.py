@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import typing
 
+from .abc_repository import ABCVoiceRepository
+
 
 if typing.TYPE_CHECKING:
     from songbird.hikari import Voicebox
-
-    from .abc_repository import ABCVoiceRepository
 
 
 class DictVoiceRepository(ABCVoiceRepository):
