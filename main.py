@@ -23,7 +23,7 @@ def main() -> None:
         token=BOT_TOKEN,
         database_manager=DatabaseManager(DATABASE_URL),
         owner_ids=(501089151089770517,),
-        intents=Intents.NONE,
+        intents=Intents.GUILD_VOICE_STATES,
         default_enabled_guilds=(867344761970229258,),
         banner="hikari_musicbot_banner",
     )
