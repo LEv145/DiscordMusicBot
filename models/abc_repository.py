@@ -1,4 +1,4 @@
-"""Abstract repositories."""
+"""Abstract repositories."""  # FIXME: New path
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ if typing.TYPE_CHECKING:
     from songbird.hikari import Voicebox
 
 
-class ABCVoiceRepository(ABC):
+class ABCVoiceRepository(ABC):  # TODO: VoiceController
     @abstractmethod
     async def add(self, id_: int, voice: Voicebox) -> None:
         """Add voicebox."""
