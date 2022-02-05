@@ -7,6 +7,7 @@ import typing
 
 if typing.TYPE_CHECKING:
     from songbird.hikari import Voicebox
+
     from .abc_repository import ABCVoiceRepository
 
 
