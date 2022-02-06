@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-from typing import (
-    TYPE_CHECKING,
-)
+import typing
 
 import lightbulb
 
 from utils.discord import DefaultEmbed
 
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
+    from project_typing import BotContext
     from bot import BaseBot
 
 
@@ -19,7 +18,7 @@ plugin = lightbulb.Plugin("Misc")
 @plugin.command()
 @lightbulb.command(name="ping", description="Ping!")
 @lightbulb.implements(lightbulb.SlashCommand)
-async def command_ping(ctx: lightbulb.Context) -> None:
+async def command_ping(ctx: BotContext) -> None:
     await ctx.respond(
         DefaultEmbed(
             title="\N{Table Tennis Paddle and Ball} Pong!",

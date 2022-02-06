@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import typing
 
 from sqlalchemy.sql import (
     select as sql_select,
@@ -17,7 +17,7 @@ from .models import (
     Guild,
 )
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -29,15 +29,13 @@ class GuildRepository(ABCGuildRepository):
         """Add guild to DB."""
         await self._session.add(guild)
 
-    async def get(self, guild_id: int) -> Guild:
+    async def get(self, guild_id: int) -> Guild | None:
         """Get guild from DB."""
         result = await self._session.execute(
             sql_select(Guild).where(Guild.id == guild_id)
         )
 
-        scalar: Guild = result.scalar()
-
-        return scalar
+        return result.scalar()
 
 
 class MemberRepository(ABCMemberRepository):
@@ -46,15 +44,12 @@ class MemberRepository(ABCMemberRepository):
 
     async def add(self, member: Member) -> None:
         """Add member to DB."""
-        self._session.add(member)
+        await self._session.add(member)
 
-    async def get(self, member_id: int) -> Member:
+    async def get(self, member_id: int) -> Member | None:
         """Get member from DB."""
-        select = sql_select(Member)
-
         result = await self._session.execute(
-            select.where(Member.id == member_id)
+            sql_select(Member).where(Member.id == member_id)
         )
-        scalar: Member = result.scalar()
 
-        return scalar
+        return result.scalar()

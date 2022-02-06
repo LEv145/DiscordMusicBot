@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from typing import (
-    TYPE_CHECKING,
-)
+import typing
 
 import lightbulb
 from lightbulb.ext import filament
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
+    from project_typing import BotContext
     from bot import BaseBot
 
 
@@ -27,7 +26,7 @@ plugin = lightbulb.Plugin("Help")
 )
 @lightbulb.implements(lightbulb.SlashCommand)
 @filament.utils.pass_options  # type: ignore
-async def command_help(ctx: lightbulb.Context, name: str) -> None:
+async def command_help(ctx: BotContext, name: str) -> None:
     assert ctx.bot.help_command is not None
     await ctx.bot.help_command.send_help(ctx, name)
 

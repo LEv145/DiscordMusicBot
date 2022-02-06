@@ -1,6 +1,4 @@
-from typing import (
-    Any,
-)
+import typing
 from datetime import datetime
 
 from hikari import (
@@ -10,7 +8,7 @@ from hikari import (
 
 
 class DefaultEmbed(Embed):
-    def __init__(self, **kwargs: Any) -> None:
+    def __init__(self, **kwargs: typing.Any) -> None:
         super().__init__(
             color=Color(0x18c79d),
             timestamp=datetime.now().astimezone(),

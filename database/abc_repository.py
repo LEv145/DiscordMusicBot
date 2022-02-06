@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import typing
 from abc import ABC, abstractmethod
 
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from .models import (
         Guild,
         Member,
@@ -19,7 +19,7 @@ class ABCGuildRepository(ABC):
         """Add guild to DB."""
 
     @abstractmethod
-    async def get(self, guild_id: int) -> Guild:
+    async def get(self, guild_id: int) -> Guild | None:
         """Get guild from DB."""
 
 
@@ -29,5 +29,5 @@ class ABCMemberRepository(ABC):
         """Add member to DB."""
 
     @abstractmethod
-    async def get(self, member_id: int) -> Member:
+    async def get(self, member_id: int) -> Member | None:
         """Get member from DB."""

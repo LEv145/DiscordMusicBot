@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-from typing import (
-    Optional,
-)
 from enum import Enum
 from datetime import date, datetime
 
@@ -36,5 +33,5 @@ class Track():
 class Member():
     id: int
     search_service: SearchService = SearchService.spotify
-    premium_date_activate: Optional[date] = None
+    premium_date_activate: date | None = None
 
