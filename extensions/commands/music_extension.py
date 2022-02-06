@@ -3,16 +3,11 @@ from __future__ import annotations
 import re
 import typing
 
-from injector import Injector
-from lyricstranslate import (
-    LyricsTranslateClient,
-    LyricsTranslateModule,
-    Category,
-)
 import lightbulb
 from lightbulb.ext import filament
 from songbird.hikari import Voicebox
 from songbird import Source as SongbirdSource
+from lyricstranslate import Category
 
 from utils.discord import DefaultEmbed
 
@@ -31,10 +26,7 @@ plugin = lightbulb.Plugin("Music")
 @lightbulb.implements(lightbulb.SlashCommand)
 @filament.utils.pass_options  # type: ignore
 async def command_search_track(ctx: BotContext, query: str) -> None:
-    injector = Injector(LyricsTranslateModule)
-    client_ = injector.get(LyricsTranslateClient)
-
-    async with client_ as client:
+    async with ctx.bot.d.lyrics_translate_client as client:
         suggestions = filter(
             lambda element: element.category == Category.SONGS,
             await client.search(query)
