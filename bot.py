@@ -53,9 +53,3 @@ class BaseBot(lightbulb.BotApp):
             raise RuntimeError("The bot is not yet initialized, me is unavailable.")
 
         return self._me
-
-    def get_me(self) -> hikari.OwnUser | None:
-        result = super().get_me()
-        self._me = result
-
-        return result
