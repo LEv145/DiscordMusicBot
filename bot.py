@@ -19,6 +19,7 @@ class BotDataStore(lightbulb.utils.DataStore):
         voice_repository: ABCVoiceRepository,
         lyrics_translate_client: LyricsTranslateClient,
     ):
+        super().__init__()
         self.database = database
         self.voice_repository = voice_repository
         self.lyrics_translate_client = lyrics_translate_client
