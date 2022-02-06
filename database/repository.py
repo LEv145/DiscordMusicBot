@@ -52,7 +52,7 @@ class MemberRepository(ABCMemberRepository):
         """Get member from DB."""
         select = sql_select(Member)
 
-        result = self._session.execute(
+        result = await self._session.execute(
             select.where(Member.id == member_id)
         )
         scalar: Member = result.scalar()
