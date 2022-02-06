@@ -3,6 +3,15 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_ffmpyplayer" />
+      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_gino" />
+      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_lavalink" />
+      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_repka" />
+      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_repository" />
+      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_services" />
+      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_tortoise" />
+      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_vk_audio" />
+      <excludeFolder url="file://$MODULE_DIR$/.mypy_cache" />
     </content>
     <orderEntry type="jdk" jdkName="Pipenv (NewMusicBot)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
