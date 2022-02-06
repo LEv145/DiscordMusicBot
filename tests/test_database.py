@@ -6,16 +6,17 @@ from sqlalchemy.sql import (
     select as sql_select,
 )
 
-from database import (
-    GuildRepository,
-    MemberRepository,
+from database.models import (
     Guild,
     Member,
     Lang,
     SearchService,
-    start_mappers,
-    metadata,
 )
+from database.repository import (
+    GuildRepository,
+    MemberRepository,
+)
+from database.orm import start_mappers, metadata
 
 
 class TestRepositories(IsolatedAsyncioTestCase):
