@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import typing
 
+import hikari
 import lightbulb
 
 
@@ -38,4 +39,17 @@ class BaseBot(lightbulb.BotApp):
     ) -> None:
         super().__init__(token, **kwargs)
         self.d = data_store
+        self._me: hikari.OwnUser | None = None
 
+        self.subscribe(hikari.StartedEvent, self.on_startup)
+
+    async def on_startup(self, _event: hikari.StartedEvent) -> None:
+        self._me = self.get_me()
+
+    @property
+    def me(self) -> hikari.OwnUser:
+        """The application user's ID."""
+        if self._me is None:
+            raise RuntimeError("The bot is not yet initialized, me is unavailable.")
+
+        return self._me
