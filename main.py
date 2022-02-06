@@ -35,7 +35,7 @@ def main() -> None:
         banner="hikari_musicbot_banner",
         data_store=BotDataStore(
             database_manager=Mock(),  # FIXME
-            voice_voice_repository=DictVoiceRepository(),
+            voice_repository=DictVoiceRepository(),
             lyrics_translate_client=lyrics_translate_injector.get(LyricsTranslateClient),
         ),
     )

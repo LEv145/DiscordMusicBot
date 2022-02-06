@@ -15,12 +15,12 @@ if typing.TYPE_CHECKING:
 class BotDataStore(lightbulb.utils.DataStore):
     def __init__(
         self,
-        database: DatabaseManager,
+        database_manager: DatabaseManager,
         voice_repository: ABCVoiceRepository,
         lyrics_translate_client: LyricsTranslateClient,
     ):
         super().__init__()
-        self.database = database
+        self.database_manager = database_manager
         self.voice_repository = voice_repository
         self.lyrics_translate_client = lyrics_translate_client
 
