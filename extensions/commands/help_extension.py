@@ -3,11 +3,11 @@ from __future__ import annotations
 import typing
 
 import lightbulb
-from lightbulb.ext import filament
+from utils.discord import pass_options
 
 if typing.TYPE_CHECKING:
     from project_typing import BotContext
-    from bot import BaseBot
+    from models.bot import BaseBot
 
 
 plugin = lightbulb.Plugin("Help")
@@ -25,7 +25,7 @@ plugin = lightbulb.Plugin("Help")
     description="Help command >:3 (Who said nya? Rather, RAWR? It's a Lion!)",
 )
 @lightbulb.implements(lightbulb.SlashCommand)
-@filament.utils.pass_options  # type: ignore
+@pass_options
 async def command_help(ctx: BotContext, name: str) -> None:
     assert ctx.bot.help_command is not None
     await ctx.bot.help_command.send_help(ctx, name)

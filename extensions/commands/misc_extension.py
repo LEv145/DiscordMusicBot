@@ -4,12 +4,12 @@ import typing
 
 import lightbulb
 
-from utils.discord import DefaultEmbed
+from tools.discord import DefaultEmbed
 
 
 if typing.TYPE_CHECKING:
     from project_typing import BotContext
-    from bot import BaseBot
+    from models.bot import BaseBot
 
 
 plugin = lightbulb.Plugin("Misc")

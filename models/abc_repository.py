@@ -12,6 +12,7 @@ if typing.TYPE_CHECKING:
 
 
 class ABCVoiceRepository(ABC):  # TODO: VoiceController
+    # TODO: Abc for dict logic (1 obj by id)
     @abstractmethod
     async def add(self, id_: int, voice: Voicebox) -> None:
         """Add voicebox."""

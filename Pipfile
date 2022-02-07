@@ -4,23 +4,19 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-asyncpg = "==0.23.0"
+asyncpg = "*"
 sqlalchemy = {extras = ["mypy", "asyncio"], version = "*"}
-pylint = "*"
 pydantic = "*"
-loguru = "*"
 toml = "*"
-poethepoet = "*"
 hikari-lightbulb = "*"
 hikari = {extras = ["speedups"], version = "*"}
-setuptools = "*"
 music-source = {git = "https://github.com/LEv145/music_source.git"}
-songbird-py = "*"
 sqlalchemy2-stubs = "*"
 hikari-musicbot-banner = {git = "https://github.com/LEv145/Hikari-music-bot-banner"}
-lightbulb-ext-filament = "*"
 "lyricstranslate.py" = {git = "https://github.com/LEv145/lyricstranslate.py"}
 uvloop = "*"
+colorlog = "*"
+maturin = "*"
 
 [dev-packages]
 tox = "*"
@@ -29,6 +25,7 @@ pylint = "*"
 mkinit = "*"
 black = "*"
 aiosqlite = "*"
+poethepoet = "*"
 
 [requires]
 python_version = "3.9"

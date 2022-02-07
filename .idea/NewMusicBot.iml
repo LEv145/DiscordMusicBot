@@ -2,15 +2,17 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/database" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/extensions" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/extensions/commands" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/models" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tools" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tools/discord" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/utils" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
-      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_ffmpyplayer" />
-      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_gino" />
-      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_lavalink" />
-      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_repka" />
-      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_repository" />
-      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_services" />
-      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_tortoise" />
-      <excludeFolder url="file://$MODULE_DIR$/static_tests/test_vk_audio" />
+      <excludeFolder url="file://$MODULE_DIR$/static_tests" />
+      <excludeFolder url="file://$MODULE_DIR$/log" />
       <excludeFolder url="file://$MODULE_DIR$/.mypy_cache" />
     </content>
     <orderEntry type="jdk" jdkName="Pipenv (NewMusicBot)" jdkType="Python SDK" />

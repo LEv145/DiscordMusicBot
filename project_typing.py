@@ -5,9 +5,10 @@ import lightbulb
 
 
 if typing.TYPE_CHECKING:
-    from bot import BaseBot
+    from models.bot import BaseBot
 
 
+# noinspection PyAbstractClass
 class BotContext(lightbulb.Context):
     bot: BaseBot
     guild: hikari.Guild

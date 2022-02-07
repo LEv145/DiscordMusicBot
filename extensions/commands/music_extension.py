@@ -4,17 +4,17 @@ import re
 import typing
 
 import lightbulb
-from lightbulb.ext import filament
 from songbird.hikari import Voicebox
 from songbird import Source as SongbirdSource
 from lyricstranslate import Category
 
-from utils.discord import DefaultEmbed
+from utils.discord import pass_options
+from tools.discord import DefaultEmbed
 
 
 if typing.TYPE_CHECKING:
     from project_typing import BotContext
-    from bot import BaseBot
+    from models.bot import BaseBot
 
 
 plugin = lightbulb.Plugin("Music")
@@ -24,7 +24,7 @@ plugin = lightbulb.Plugin("Music")
 @lightbulb.option("query", "Query for search")
 @lightbulb.command(name="search_track", description="Search track")
 @lightbulb.implements(lightbulb.SlashCommand)
-@filament.utils.pass_options  # type: ignore
+@pass_options
 async def command_search_track(ctx: BotContext, query: str) -> None:
     async with ctx.bot.d.lyrics_translate_client as client:
         suggestions = filter(
@@ -61,11 +61,30 @@ async def command_join(ctx: BotContext) -> None:
         await ctx.respond(DefaultEmbed(description="You're not on the music channel(´• ω •)"))
         return
 
+    try:
+        await states.iterator().filter(
+            lambda i: (
+                i.user_id == ctx.bot.me.id  # Check bot id
+                and i.channel_id == voice_state.channel_id  # Check channel_id
+            )
+        ).__anext__()
+    except StopAsyncIteration:  # Ok if no found
+        pass
+    else:
+        # Check: Bot already connected
+        await ctx.respond(
+            DefaultEmbed(
+                description="I'm already connected to the music channel(´• ω •)"
+            )
+        )
+        return
+
     voicebox = await Voicebox.connect(
         client=ctx.bot,
         guild_id=voice_state.guild_id,
         channel_id=voice_state.channel_id,
     )
+
     await ctx.bot.d.voice_repository.add(ctx.author.id, voicebox)
 
     await ctx.respond(DefaultEmbed(description="I'm connected(* ^ ω ^)"))
@@ -75,7 +94,7 @@ async def command_join(ctx: BotContext) -> None:
 @lightbulb.option("query", "Query for play")
 @lightbulb.command(name="play", description="Play music!")
 @lightbulb.implements(lightbulb.SlashCommand)
-@filament.utils.pass_options  # type: ignore
+@pass_options
 async def command_play(ctx: lightbulb.Context, query: str) -> None:
 
     if re.match(r'^https?://', query) is not None:
