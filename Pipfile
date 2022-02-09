@@ -16,7 +16,9 @@ hikari-musicbot-banner = {git = "https://github.com/LEv145/Hikari-music-bot-bann
 "lyricstranslate.py" = {git = "https://github.com/LEv145/lyricstranslate.py"}
 uvloop = "*"
 colorlog = "*"
-maturin = "*"
+lavasnek-rs = "*"
+mypy-extensions = "*"
+typing-extensions = "*"
 
 [dev-packages]
 tox = "*"
