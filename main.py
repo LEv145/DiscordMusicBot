@@ -5,6 +5,7 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import colorlog
+import lavasnek_rs
 from hikari import Intents
 from injector import Injector
 from lyricstranslate import (
@@ -35,7 +36,7 @@ colorlog.basicConfig(
         "%(thin)s%(message)s%(reset)s"
     ),
 )
-_log = colorlog.getLogger(__name__)
+_log = colorlog.getLogger("music_bot.main")
 
 
 def main() -> None:

@@ -1,11 +1,8 @@
-import typing
-
 import hikari
 import lightbulb
 
 
-if typing.TYPE_CHECKING:
-    from models.bot import BaseBot
+from models.bot import BaseBot
 
 
 # noinspection PyAbstractClass
