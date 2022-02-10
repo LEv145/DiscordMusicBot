@@ -3,7 +3,6 @@ from __future__ import annotations
 import asyncio
 import typing
 import re
-import time
 import logging
 
 import hikari
@@ -59,28 +58,22 @@ class EventHandler:
 
     async def track_exception(
         self,
-        lavalink_client: lavasnek_rs.Lavalink,
+        _lavalink_client: lavasnek_rs.Lavalink,
         event: lavasnek_rs.TrackException,
     ) -> None:
         _log.warning(f"Track exception event happened on guild: {event.guild_id}")
-
-        # If a track was unable to be played, skip it
-        skip = await lavalink_client.skip(event.guild_id)
-        node = await lavalink_client.get_guild_node(event.guild_id)
-
-        if not node:
-            return
-
-        if skip and not node.queue and not node.now_playing:
-            await lavalink_client.stop(event.guild_id)
 
 
 _plugin = lightbulb.Plugin("Music")
 
 
 @_plugin.command()
-@lightbulb.add_checks(lightbulb.guild_only)
-@lightbulb.command("join", "Join to voice channel!", auto_defer=True)
+@lightbulb.add_checks(lightbulb.guild_only)  # TODO guild_only
+@lightbulb.command(
+    name="join",
+    description="Join to voice channel!",
+    auto_defer=True,
+)
 @lightbulb.implements(lightbulb.SlashCommand)
 async def _join_command(ctx: ExtensionContext) -> None:
     """Joins the voice channel you are in."""
@@ -91,8 +84,89 @@ async def _join_command(ctx: ExtensionContext) -> None:
 
 
 @_plugin.command()
+@lightbulb.command(
+    name="leave",
+    description="Leaves the voice channel the bot is in, clearing the queue.",
+    auto_defer=True,
+)
+@lightbulb.implements(lightbulb.SlashCommand)
+async def _leave_command(ctx: ExtensionContext) -> None:
+    """Leaves the voice channel the bot is in, clearing the queue."""
+    states = ctx.bot.cache.get_voice_states_view_for_guild(ctx.guild_id)
+
+    # Check if bot in voice channel
+    try:
+        await states.iterator().filter(
+            lambda i: i.user_id == ctx.bot.user_id
+        ).__anext__()
+    except StopAsyncIteration:
+        await ctx.respond("Not in a voice channel")
+        return None
+
+    # Stops the session in Lavalink of the guild
+    try:
+        await ctx.bot.d.lavalink_client.destroy(guild_id=ctx.guild_id)
+    except lavasnek_rs.NetworkError:
+        await ctx.respond("Network error")
+
+    # Leave from channel
+    await ctx.bot.update_voice_state(guild=ctx.guild_id, channel=None)
+    await ctx.bot.d.lavalink_client.wait_for_connection_info_remove(
+        guild_id=ctx.guild_id,
+    )
+
+    # Remove the guild node
+    await ctx.bot.d.lavalink_client.remove_guild_node(guild_id=ctx.guild_id)
+
+    await ctx.respond("Left voice channel")
+
+
+@_plugin.command()
+@lightbulb.option("query", "Query")
+@lightbulb.command(
+    name="play",
+    description="Play music",
+    auto_defer=True,
+)
+@lightbulb.implements(lightbulb.SlashCommand)
+@pass_options
+async def _play_command(ctx: ExtensionContext, query: str) -> None:  # TODO
+    # if re.match("^https?://.+$", query):
+    #     ...
+    # else:
+    #     ...
+
+    connection = ctx.bot.d.lavalink_client.get_guild_gateway_connection_info(
+        guild_id=ctx.guild_id,
+    )
+
+    if connection is None:
+        await _join_to_author(ctx)
+
+    tracks_result = await ctx.bot.d.lavalink_client.get_tracks(
+        query="http://dict.youdao.com/dictvoice?audio=nice&type=1",
+    )
+    track = tracks_result.tracks[0]
+
+    try:
+        await ctx.bot.d.lavalink_client.play(
+            guild_id=ctx.guild_id,
+            track=track,
+        ).start()
+    except lavasnek_rs.NoSessionPresent:
+        await ctx.respond("Use join")
+        return
+
+    await ctx.respond("Start playing")
+
+
+@_plugin.command()
 @lightbulb.option("query", "Query for search")
-@lightbulb.command(name="search_track", description="Search track", auto_defer=True)
+@lightbulb.command(
+    name="search_track",
+    description="Search track",
+    auto_defer=True,
+)
 @lightbulb.implements(lightbulb.SlashCommand)
 @pass_options
 async def _search_track_command(ctx: BotContext, query: str) -> None:
@@ -114,11 +188,53 @@ async def _search_track_command(ctx: BotContext, query: str) -> None:
         )
 
 
+@_plugin.listener(hikari.ShardReadyEvent)
+async def _start_lavalink(event: hikari.ShardReadyEvent) -> None:
+    """Event that triggers when the hikari gateway is ready."""
+    bot: ExtensionBot = event.app  # type: ignore
+
+    lavalink_client_builder = (
+        # token can be an empty string if you don't want to use lavasnek's discord gateway.
+        lavasnek_rs.LavalinkBuilder(bot_id=event.my_user.id, token="")
+        .set_host(host="127.0.0.1")
+        .set_password(password="TheCat")  # Do not change, pls
+    )
+
+    lavalink_client_builder.set_start_gateway(False)
+
+    bot.d.lavalink_client = await lavalink_client_builder.build(EventHandler)
+
+
+@_plugin.listener(hikari.VoiceStateUpdateEvent)
+async def _on_voice_state_update(event: hikari.VoiceStateUpdateEvent) -> None:
+    bot: ExtensionBot = event.app  # type: ignore
+
+    bot.d.lavalink_client.raw_handle_event_voice_state_update(
+        guild_id=event.state.guild_id,
+        user_id=event.state.user_id,
+        session_id=event.state.session_id,
+        channel_id=event.state.channel_id,
+    )
+
+
+@_plugin.listener(hikari.VoiceServerUpdateEvent)
+async def _on_voice_server_update(event: hikari.VoiceServerUpdateEvent) -> None:
+    assert event.endpoint is not None
+
+    bot: ExtensionBot = event.app  # type: ignore
+
+    await bot.d.lavalink_client.raw_handle_event_voice_server_update(
+        guild_id=event.guild_id,
+        endpoint=event.endpoint,
+        token=event.token,
+    )
+
+
 async def _join_to_author(ctx: ExtensionContext) -> lavasnek_rs.ConnectionInfo | None:
     """Join the bot to the voice channel where the member is located."""
     states = ctx.bot.cache.get_voice_states_view_for_guild(ctx.guild_id)
 
-    # Author in voice channel
+    # Check if author in voice channel
     try:
         author_voice_state = await states.iterator().filter(
             lambda i: i.user_id == ctx.author.id
@@ -127,7 +243,7 @@ async def _join_to_author(ctx: ExtensionContext) -> lavasnek_rs.ConnectionInfo |
         await ctx.respond(DefaultEmbed(description="You're not on the music channel(´• ω •)"))
         return None
 
-    # Bot is already connected
+    # Check if bot is already connected to user channel
     try:
         await states.iterator().filter(
             lambda i: (
@@ -162,48 +278,9 @@ async def _join_to_author(ctx: ExtensionContext) -> lavasnek_rs.ConnectionInfo |
         )
         return None
 
+    await ctx.bot.d.lavalink_client.create_session(connection_info)
+
     return connection_info
-
-
-@_plugin.listener(hikari.ShardReadyEvent)
-async def _start_lavalink(event: hikari.ShardReadyEvent) -> None:
-    """Event that triggers when the hikari gateway is ready."""
-    bot: ExtensionBot = event.app  # type: ignore
-
-    lavalink_client_builder = (
-        # token can be an empty string if you don't want to use lavasnek's discord gateway.
-        lavasnek_rs.LavalinkBuilder(bot_id=event.my_user.id, token="")
-        .set_host(host="127.0.0.1")
-        .set_password(password="TheCat")  # Do not change, pls
-        .set_start_gateway(False)
-    )
-
-    bot.d.lavalink_client = await lavalink_client_builder.build(EventHandler)
-
-
-@_plugin.listener(hikari.VoiceStateUpdateEvent)
-async def _on_voice_state_update(event: hikari.VoiceStateUpdateEvent) -> None:
-    bot: ExtensionBot = event.app  # type: ignore
-
-    bot.d.lavalink_client.raw_handle_event_voice_state_update(
-        guild_id=event.state.guild_id,
-        user_id=event.state.user_id,
-        session_id=event.state.session_id,
-        channel_id=event.state.channel_id,
-    )
-
-
-@_plugin.listener(hikari.VoiceServerUpdateEvent)
-async def _on_voice_server_update(event: hikari.VoiceServerUpdateEvent) -> None:
-    assert event.endpoint is not None
-
-    bot: ExtensionBot = event.app  # type: ignore
-
-    await bot.d.lavalink_client.raw_handle_event_voice_server_update(
-        guild_id=event.guild_id,
-        endpoint=event.endpoint,
-        token=event.token,
-    )
 
 
 # @plugin.command()
