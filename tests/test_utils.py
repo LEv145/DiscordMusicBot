@@ -1,7 +1,7 @@
 import time
 from unittest import IsolatedAsyncioTestCase
 
-from utils.general import async_wait_until
+from music_bot.utils.general import async_wait_until
 
 
 class TestUtils(IsolatedAsyncioTestCase):

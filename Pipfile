@@ -20,6 +20,7 @@ lavasnek-rs = "*"
 mypy-extensions = "*"
 typing-extensions = "*"
 types-toml = "*"
+click = "*"
 
 [dev-packages]
 tox = "*"

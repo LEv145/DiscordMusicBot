@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import lightbulb
 
-from models.base_plugin_manager import BasePluginManager
-from tools.discord import DefaultEmbed
+from music_bot.models.base_plugin_manager import BasePluginManager
+from music_bot.tools.discord import DefaultEmbed
 
 
 class MiscPluginManager(BasePluginManager):

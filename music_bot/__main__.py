@@ -3,8 +3,8 @@ import sys
 import logging
 import toml
 from pathlib import Path
-from unittest.mock import Mock
 
+import click
 import colorlog
 import hikari
 import lightbulb
@@ -25,15 +25,15 @@ from music_source.extractor import (
     YandexMusicPlaylistExtractor,
 )
 
-from models.bot import BaseBot
-from extensions import (
+from music_bot.models.bot import BaseBot
+from music_bot.extensions import (
     MiscPluginManager,
     HelpPluginManager,
     MusicPluginManager,
     PluginDataStore,
     LavalinkConfig,
 )
-from injectors import YandexMusicAPITokenAuthModule
+from music_bot.injectors import YandexMusicAPITokenAuthModule
 
 
 ######### Logging #########
@@ -63,6 +63,7 @@ YANDEX_MUSIC_TOKEN: str = _config["clients"]["yandex_music"]["token"]
 ######### Config #########
 
 
+@click.command()
 def main() -> None:
     """Main function."""
 

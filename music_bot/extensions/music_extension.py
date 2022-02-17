@@ -9,19 +9,19 @@ import hikari
 import lightbulb
 import lavasnek_rs
 from lyricstranslate import Category
-from music_source.track_models import Track, URLTrack
+from music_source.track_models import Track
 
-from utils.discord import pass_options
-from utils.general import (
+from music_bot.utils.discord import pass_options
+from music_bot.utils.general import (
     async_wait_until,
     TimeoutExpired,
 )
-from tools.discord import DefaultEmbed
-from models.base_plugin_manager import BasePluginManager
+from music_bot.tools.discord import DefaultEmbed
+from music_bot.models.base_plugin_manager import BasePluginManager
 
 
 if typing.TYPE_CHECKING:
-    from project_typing import BotContext
+    from music_bot.project_typing import BotContext
 
     from lyricstranslate import LyricsTranslateClient
     from music_source.extractor import TrackExtractor

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import lightbulb
-from models.base_plugin_manager import BasePluginManager
-from utils.discord import pass_options
+from music_bot.models.base_plugin_manager import BasePluginManager
+from music_bot.utils.discord import pass_options
 
 
 class HelpPluginManager(BasePluginManager):

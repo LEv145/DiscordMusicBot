@@ -2,7 +2,7 @@ import hikari
 import lightbulb
 
 
-from models.bot import BaseBot
+from bot import BaseBot
 
 
 # noinspection PyAbstractClass

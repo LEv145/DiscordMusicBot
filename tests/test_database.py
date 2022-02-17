@@ -6,17 +6,13 @@ from sqlalchemy.sql import (
     select as sql_select,
 )
 
-from database.models import (
-    Guild,
+from music_bot.database.models import (
     Member,
-    Lang,
-    SearchService,
 )
-from database.repository import (
-    GuildRepository,
+from music_bot.database.repository import (
     MemberRepository,
 )
-from database.orm import start_mappers, metadata
+from music_bot.database.orm import start_mappers, metadata
 
 
 class TestRepositories(IsolatedAsyncioTestCase):

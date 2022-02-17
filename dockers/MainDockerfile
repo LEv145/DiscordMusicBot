@@ -51,4 +51,4 @@ RUN ${PYTHON_NAME} -m pip install pipenv
 RUN pipenv install --deploy --ignore-pipfile  # Install packages
 
 
-ENTRYPOINT ["$python", "main.py"]
+ENTRYPOINT ["$python", "-m", "music_bot"]
