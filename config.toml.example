@@ -4,7 +4,6 @@ token = ""
 [database]
 url = ""
 
-
 [clients]
 [clients.yandex_music]
 token = ""
