@@ -1,0 +1,54 @@
+FROM ubuntu:latest
+
+
+ARG python=python3.10
+ENV PYTHON_NAME=$python
+
+
+WORKDIR /opt/music_bot
+COPY . .
+
+
+RUN apt-get update
+
+RUN apt-get install software-properties-common -y
+RUN apt-get install git -y
+RUN apt-get install g++ -y
+RUN apt-get install curl -y
+
+# Install python
+RUN add-apt-repository ppa:deadsnakes/ppa -y
+RUN apt-get install ${PYTHON_NAME} -y
+RUN apt-get install ${PYTHON_NAME}-dev -y  # Install python header for c/cpp modules
+RUN apt-get install ${PYTHON_NAME}-distutils -y  # Install distutils for python pip
+
+# Install gh
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | \
+dd of=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg && \
+echo "deb [arch=$(dpkg --print-architecture) \
+signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] \
+https://cli.github.com/packages stable main" | \
+tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+apt-get update && \
+apt-get install gh -y
+
+# Install git
+RUN apt-get install git -y
+
+# Auth on github from token
+RUN gh auth login --with-token < dockers/gh_token.txt && \
+gh auth setup-git && \
+echo '    user: LEv145' >> ~/.config/gh/hosts.yml  # https://github.com/cli/cli/issues/5183
+
+
+#RUN groupadd -g 322 docker && useradd --create-home --system -u 322 -g docker docker
+#USER docker
+
+
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | ${PYTHON_NAME}  # Install python pip
+RUN ${PYTHON_NAME} -m pip install pipenv
+
+RUN pipenv install --deploy --ignore-pipfile  # Install packages
+
+
+ENTRYPOINT ["$python", "main.py"]

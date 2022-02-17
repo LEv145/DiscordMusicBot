@@ -3,6 +3,13 @@
 
 Project: `https://www.figma.com/file/kkUqe75Yc6wUSNeYR2hOtL/DiscordMusicBotRelease`
 
+
+Start bot:
+```
+docker build -f dockers/MainDockerfile -t lev145/music_bot .
+docker run --name music_bot -d --rm lev145/music_bot
+```
+
 Start lavalink:
 ```
 docker build -f dockers/LavalinkDockerfile -t lev145/lavalink .
