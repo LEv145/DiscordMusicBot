@@ -37,11 +37,13 @@ from music_bot.injectors import YandexMusicAPITokenAuthModule
 
 
 ######### Logging #########
+# TODO
+Path("./log").mkdir(parents=True, exist_ok=True)  # Create logs/ if not exist
 colorlog.basicConfig(
     level=logging.INFO,
     handlers=(
         logging.StreamHandler(stream=sys.stderr),
-        logging.FileHandler(Path("log/main.log"))
+        logging.FileHandler(Path("log/main.log")),
     ),
     format=(
         "%(log_color)s%(bold)s%(levelname)-1.1s%(thin)s %(asctime)23.23s %(bold)s%(name)s: "

@@ -21,7 +21,7 @@ from music_bot.models.base_plugin_manager import BasePluginManager
 
 
 if typing.TYPE_CHECKING:
-    from music_bot.project_typing import BotContext
+    from src.music_bot.project_typing import BotContext
 
     from lyricstranslate import LyricsTranslateClient
     from music_source.extractor import TrackExtractor
@@ -98,7 +98,7 @@ class StaticCommands():
         connection_info = await _join_to_author(ctx, plugin.d.lavalink_client)
 
         if connection_info is not None:
-            await ctx.respond(f"Joined <#{connection_info['channel_id']}>")  # type: ignore
+            await ctx.respond(f"Joined <#{connection_info['channel_id']}>")
 
     @staticmethod
     @lightbulb.command(
