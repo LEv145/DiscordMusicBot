@@ -1,0 +1,33 @@
+FROM python:3.10.2-bullseye
+
+
+WORKDIR /opt/music_bot
+COPY src poetry.lock pyproject.toml dockers/gh_token.txt config.toml ./
+
+
+RUN apt-get update
+
+RUN apt-get install git -y
+RUN apt-get install curl -y
+
+# Install gh
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | \
+dd of=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg && \
+echo "deb [arch=$(dpkg --print-architecture) \
+signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] \
+https://cli.github.com/packages stable main" | \
+tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+apt-get update && \
+apt-get install gh -y
+
+# Auth on github from token
+RUN gh auth login --with-token < gh_token.txt && gh auth setup-git
+RUN rm -f gh_token.txt
+
+#RUN groupadd -g 322 docker && useradd --create-home --system -u 322 -g docker docker
+#USER docker
+
+RUN pip install poetry
+RUN poetry install --no-dev --no-interaction
+
+ENTRYPOINT ["poetry", "run", "music_bot"]

@@ -4,7 +4,9 @@ from typing import (
     TYPE_CHECKING,
 )
 
+
 import lightbulb
+from lightbulb.ext import filament
 
 
 if TYPE_CHECKING:
