@@ -5,19 +5,19 @@ import re
 import logging
 from dataclasses import dataclass
 
-import hikari
+import hikari_tools
 import lightbulb
 import lavasnek_rs
 from plugin_manager import PluginManager, pass_plugin
 from lyricstranslate import Category
 from music_source.track_models import Track
 
-from music_bot.utils.discord import pass_options
+from music_bot.tools.lightbulb_tools import pass_options
 from music_bot.utils.general import (
     async_wait_until,
     TimeoutExpired,
 )
-from music_bot.tools.discord import DefaultEmbed
+from music_bot.tools.hikari_tools import DefaultEmbed
 
 
 if typing.TYPE_CHECKING:
@@ -63,17 +63,17 @@ class MusicPluginManager(PluginManager):
         self._plugin._d = data_store
 
         self._plugin.listener(
-            hikari.ShardReadyEvent,
+            hikari_tools.ShardReadyEvent,
             StaticCommands.start_lavalink,
             bind=True,
         )
         self._plugin.listener(
-            hikari.VoiceStateUpdateEvent,
+            hikari_tools.VoiceStateUpdateEvent,
             StaticCommands.on_voice_state_update,
             bind=True,
         )
         self._plugin.listener(
-            hikari.VoiceServerUpdateEvent,
+            hikari_tools.VoiceServerUpdateEvent,
             StaticCommands.on_voice_server_update,
             bind=True,
         )
@@ -227,11 +227,11 @@ class StaticCommands():
     @staticmethod
     async def start_lavalink(
         plugin: PluginType,
-        event: hikari.ShardReadyEvent,
+        event: hikari_tools.ShardReadyEvent,
     ) -> None:
-        """Event that triggers when the hikari gateway is ready."""
+        """Event that triggers when the hikari_tools gateway is ready."""
         lavalink_client_builder = (
-            # token can be an empty string if you don't want to use lavasnek's discord gateway.
+            # token can be an empty string if you don't want to use lavasnek's lightbulb_tools gateway.
             lavasnek_rs.LavalinkBuilder(bot_id=event.my_user.id, token="")
             .set_host(host=plugin.d.lavalink_config.host)
             .set_password(password=plugin.d.lavalink_config.password)
@@ -244,7 +244,7 @@ class StaticCommands():
     @staticmethod
     async def on_voice_state_update(
         plugin: PluginType,
-        event: hikari.VoiceStateUpdateEvent,
+        event: hikari_tools.VoiceStateUpdateEvent,
     ) -> None:
         plugin.d.lavalink_client.raw_handle_event_voice_state_update(
             guild_id=event.state.guild_id,
@@ -256,7 +256,7 @@ class StaticCommands():
     @staticmethod
     async def on_voice_server_update(
         plugin: PluginType,
-        event: hikari.VoiceServerUpdateEvent,
+        event: hikari_tools.VoiceServerUpdateEvent,
     ) -> None:
         assert event.endpoint is not None
 

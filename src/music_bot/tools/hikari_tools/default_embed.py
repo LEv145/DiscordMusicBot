@@ -1,16 +1,13 @@
 import typing
 from datetime import datetime
 
-from hikari import (
-    Embed,
-    Color,
-)
+import hikari
 
 
-class DefaultEmbed(Embed):
+class DefaultEmbed(hikari.Embed):
     def __init__(self, **kwargs: typing.Any) -> None:
         super().__init__(
-            color=Color(0x18c79d),
+            color=hikari.Color(0x18c79d),
             timestamp=datetime.now().astimezone(),
             **kwargs,
         )

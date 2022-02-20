@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import lightbulb
-from plugin_manager import PluginManager, pass_plugin
+from plugin_manager import PluginManager
 
-from music_bot.tools.discord import DefaultEmbed
+from music_bot.tools.hikari_tools import DefaultEmbed
 
 
 class MiscPluginManager(PluginManager):

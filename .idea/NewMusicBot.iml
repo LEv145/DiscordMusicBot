@@ -10,8 +10,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/music_bot/extensions/commands" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/music_bot/models" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/music_bot/tools" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/music_bot/tools/discord" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/music_bot/utils" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/music_bot/tools/lightbulb_tools" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/static_tests" />
       <excludeFolder url="file://$MODULE_DIR$/log" />
