@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "music_bot"
-version = "0.1.0"
+version = "0.1.1"
 description = "Discord music bot"
 authors = ["LEv145"]
 license = "GPLv2"
@@ -12,7 +12,6 @@ music-source = {git = "https://github.com/LEv145/music_source"}
 SQLAlchemy = {extras = ["mypy", "asyncio"], version = "^1.4.31"}
 pydantic = "^1.9.0"
 toml = "^0.10.2"
-hikari-lightbulb = "^2.2.0"
 hikari = {extras = ["speedups"], version = "^2.0.0-alpha.106"}
 sqlalchemy2-stubs = "^0.0.2-alpha.20"
 uvloop = "^0.16.0"
@@ -23,13 +22,15 @@ typing-extensions = "^4.1.1"
 types-toml = "^0.10.4"
 click = "^8.0.3"
 "lyricstranslate.py" = {git = "https://github.com/LEv145/lyricstranslate.py"}
+hikari-lightbulb = "^2.2.0"
+plugin-manager = {git = "https://github.com/LEv145/lightbulb_plugin_manager.git", rev = "dev"}
 
 [tool.poetry.dev-dependencies]
 tox = "*"
 mypy = "*"
 pylint = "*"
 mkinit = "*"
-black = "*"
+black = "^21.12b0"
 aiosqlite = "*"
 poethepoet = "*"
 

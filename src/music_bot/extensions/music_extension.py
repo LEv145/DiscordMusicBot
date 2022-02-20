@@ -8,6 +8,7 @@ from dataclasses import dataclass
 import hikari
 import lightbulb
 import lavasnek_rs
+from plugin_manager import PluginManager, pass_plugin
 from lyricstranslate import Category
 from music_source.track_models import Track
 
@@ -17,7 +18,6 @@ from music_bot.utils.general import (
     TimeoutExpired,
 )
 from music_bot.tools.discord import DefaultEmbed
-from music_bot.models.base_plugin_manager import BasePluginManager
 
 
 if typing.TYPE_CHECKING:
@@ -52,7 +52,7 @@ class PluginType(lightbulb.Plugin):
     d: PluginDataStoreType
 
 
-class MusicPluginManager(BasePluginManager):
+class MusicPluginManager(PluginManager):
     def __init__(
         self,
         name: str,
@@ -90,11 +90,12 @@ class StaticCommands():
         auto_defer=True,
     )
     @lightbulb.implements(lightbulb.SlashCommand)
-    async def join_command(ctx: BotContext) -> None:
+    @pass_plugin
+    async def join_command(
+        plugin: PluginType,
+        ctx: BotContext,
+    ) -> None:
         """Joins the voice channel you are in."""
-        assert ctx.command is not None
-        plugin: PluginType = ctx.command.plugin  # type: ignore
-
         connection_info = await _join_to_author(ctx, plugin.d.lavalink_client)
 
         if connection_info is not None:
@@ -107,11 +108,12 @@ class StaticCommands():
         auto_defer=True,
     )
     @lightbulb.implements(lightbulb.SlashCommand)
-    async def leave_command(ctx: BotContext) -> None:
+    @pass_plugin
+    async def leave_command(
+        plugin: PluginType,
+        ctx: BotContext,
+    ) -> None:
         """Leaves the voice channel the bot is in, clearing the queue."""
-        assert ctx.command is not None
-        plugin: PluginType = ctx.command.plugin  # type: ignore
-
         states = ctx.bot.cache.get_voice_states_view_for_guild(ctx.guild_id)
 
         # Check if bot in voice channel
@@ -149,10 +151,12 @@ class StaticCommands():
     )
     @lightbulb.implements(lightbulb.SlashCommand)
     @pass_options
-    async def play_command(ctx: BotContext, query: str) -> None:  # TODO
-        assert ctx.command is not None
-        plugin: PluginType = ctx.command.plugin  # type: ignore
-
+    @pass_plugin
+    async def play_command(
+        plugin: PluginType,
+        ctx: BotContext,
+        query: str,
+    ) -> None:  # TODO
         if re.match("^https?://.+$", query):
             result = await plugin.d.track_extractor.extract(query)
 
@@ -197,10 +201,12 @@ class StaticCommands():
     )
     @lightbulb.implements(lightbulb.SlashCommand)
     @pass_options
-    async def search_track_command(ctx: BotContext, query: str) -> None:
-        assert ctx.command is not None
-        plugin: PluginType = ctx.command.plugin  # type: ignore
-
+    @pass_plugin
+    async def search_track_command(
+        plugin: PluginType,
+        ctx: BotContext,
+        query: str,
+    ) -> None:
         async with plugin.d.lyrics_translate_client as client:
             suggestions = filter(
                 lambda element: element.category == Category.SONGS,

@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import lightbulb
+from plugin_manager import PluginManager, pass_plugin
 
-from music_bot.models.base_plugin_manager import BasePluginManager
 from music_bot.tools.discord import DefaultEmbed
 
 
-class MiscPluginManager(BasePluginManager):
+class MiscPluginManager(PluginManager):
     def __init__(self, name: str) -> None:
         super().__init__(name=name)
         self.load_commands(self)

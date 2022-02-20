@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import lightbulb
 
-from music_bot.models.base_plugin_manager import BasePluginManager
+from plugin_manager import PluginManager
 from music_bot.utils.discord import pass_options
 
 
-class HelpPluginManager(BasePluginManager):
+class HelpPluginManager(PluginManager):
     def __init__(self, name: str) -> None:
         super().__init__(name=name)
         self.load_commands(self)
