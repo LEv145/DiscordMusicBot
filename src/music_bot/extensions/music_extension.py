@@ -5,7 +5,7 @@ import re
 import logging
 from dataclasses import dataclass
 
-import hikari_tools
+import hikari
 import lightbulb
 import lavasnek_rs
 from plugin_manager import PluginManager, pass_plugin
@@ -63,17 +63,17 @@ class MusicPluginManager(PluginManager):
         self._plugin._d = data_store
 
         self._plugin.listener(
-            hikari_tools.ShardReadyEvent,
+            hikari.ShardReadyEvent,
             StaticCommands.start_lavalink,
             bind=True,
         )
         self._plugin.listener(
-            hikari_tools.VoiceStateUpdateEvent,
+            hikari.VoiceStateUpdateEvent,
             StaticCommands.on_voice_state_update,
             bind=True,
         )
         self._plugin.listener(
-            hikari_tools.VoiceServerUpdateEvent,
+            hikari.VoiceServerUpdateEvent,
             StaticCommands.on_voice_server_update,
             bind=True,
         )
@@ -227,7 +227,7 @@ class StaticCommands():
     @staticmethod
     async def start_lavalink(
         plugin: PluginType,
-        event: hikari_tools.ShardReadyEvent,
+        event: hikari.ShardReadyEvent,
     ) -> None:
         """Event that triggers when the hikari_tools gateway is ready."""
         lavalink_client_builder = (
@@ -244,7 +244,7 @@ class StaticCommands():
     @staticmethod
     async def on_voice_state_update(
         plugin: PluginType,
-        event: hikari_tools.VoiceStateUpdateEvent,
+        event: hikari.VoiceStateUpdateEvent,
     ) -> None:
         plugin.d.lavalink_client.raw_handle_event_voice_state_update(
             guild_id=event.state.guild_id,
@@ -256,7 +256,7 @@ class StaticCommands():
     @staticmethod
     async def on_voice_server_update(
         plugin: PluginType,
-        event: hikari_tools.VoiceServerUpdateEvent,
+        event: hikari.VoiceServerUpdateEvent,
     ) -> None:
         assert event.endpoint is not None
 

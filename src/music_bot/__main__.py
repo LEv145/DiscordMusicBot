@@ -6,7 +6,7 @@ from pathlib import Path
 
 import click
 import colorlog
-import hikari_tools
+import hikari
 import lightbulb
 from injector import Injector
 from lyricstranslate import (
@@ -82,7 +82,7 @@ def main() -> None:
     bot = BaseBot(
         token=BOT_TOKEN,
         owner_ids=[501089151089770517],
-        intents=hikari_tools.Intents.GUILD_VOICE_STATES,
+        intents=hikari.Intents.GUILD_VOICE_STATES,
         default_enabled_guilds=[867344761970229258],
         banner="hikari_musicbot_banner",
         logs=None,
