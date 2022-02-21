@@ -25,7 +25,7 @@ from music_source.extractor import (
     YandexMusicPlaylistExtractor,
 )
 
-from music_bot.models.bot import BaseBot
+from tools.lightbulb import BaseBot
 from music_bot.extensions import (
     MiscPluginManager,
     HelpPluginManager,
