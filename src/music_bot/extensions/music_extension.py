@@ -1,55 +1,71 @@
 from __future__ import annotations
 
 import typing
-import re
 import logging
 from dataclasses import dataclass
 
 import hikari
 import lightbulb
 import lavasnek_rs
-from plugin_manager import PluginManager, pass_plugin
-from lyricstranslate import Category
-from music_source.track_models import Track
+from lightbulb_plugin_manager import PluginManager, pass_plugin
 
-from music_bot.tools.lightbulb_tools import pass_options
+from music_bot.allocation.player_managers import (
+    BasePlayerManager,
+    TrackNotFoundInQueue,
+)
+from music_bot.allocation.tools.lavasnek import HikariVoiceLavasnekPlayer
+from allocation.abс_repositories import ABCQueueRepository
+from music_bot.allocation.tools.lightbulb import pass_options
 from music_bot.utils.general import (
     async_wait_until,
     TimeoutExpired,
 )
-from music_bot.tools.hikari_tools import DefaultEmbed
+from music_bot.allocation.tools import DefaultEmbed
 
 
 if typing.TYPE_CHECKING:
-    from src.music_bot.project_typing import BotContext
+    from music_bot.allocation.tools.lightbulb import BotContextType, BaseBot
 
     from lyricstranslate import LyricsTranslateClient
     from music_source.extractor import TrackExtractor
     from lavasnek_rs import Lavalink as LavalinkClient
 
 
-_log = logging.getLogger("music_bot.lavalink")
+_log = logging.getLogger(__name__)
 
 
 @dataclass
 class LavalinkConfig():
-    host: str
     password: str
-
-
-@dataclass
-class PluginDataStore(lightbulb.utils.DataStore):
-    lavalink_config: LavalinkConfig
-    lyrics_translate_client: LyricsTranslateClient
+    host: str
     track_extractor: TrackExtractor
+    queue_repository: ABCQueueRepository
 
 
-class PluginDataStoreType(PluginDataStore):
-    lavalink_client: LavalinkClient  # TODO
+# noinspection PyAttributeOutsideInit
+class PluginDataStore(lightbulb.utils.DataStore):
+    def __init__(
+        self,
+        lavalink_config: LavalinkConfig,
+        lyrics_translate_client: LyricsTranslateClient,
+    ):
+        self.lavalink_config = lavalink_config
+        self.lyrics_translate_client = lyrics_translate_client
+
+        self._lavasnek_player_manager: BasePlayerManager | None = None
+
+    def get_lavasnek_player_manager(self) -> BasePlayerManager:
+        if self._lavasnek_player_manager is None:
+            raise RuntimeError("Lavasnek player is not registered")
+
+        return self._lavasnek_player_manager
+
+    def set_lavasnek_player_manager(self, value: BasePlayerManager) -> None:
+        self._lavasnek_player_manager = value
 
 
 class PluginType(lightbulb.Plugin):
-    d: PluginDataStoreType
+    d: PluginDataStore
 
 
 class MusicPluginManager(PluginManager):
@@ -59,179 +75,36 @@ class MusicPluginManager(PluginManager):
         data_store: PluginDataStore,
     ) -> None:
         super().__init__(name=name)
-
         self._plugin._d = data_store
 
         self._plugin.listener(
             hikari.ShardReadyEvent,
-            StaticCommands.start_lavalink,
+            self.start_lavalink,
             bind=True,
         )
         self._plugin.listener(
             hikari.VoiceStateUpdateEvent,
-            StaticCommands.on_voice_state_update,
+            self.on_voice_state_update,
             bind=True,
         )
         self._plugin.listener(
             hikari.VoiceServerUpdateEvent,
-            StaticCommands.on_voice_server_update,
+            self.on_voice_server_update,
             bind=True,
         )
 
         self.load_commands(StaticCommands)
-
-
-class StaticCommands():
-    @staticmethod
-    @lightbulb.add_checks(lightbulb.guild_only)  # TODO guild_only
-    @lightbulb.command(
-        name="join",
-        description="Join to voice channel!",
-        auto_defer=True,
-    )
-    @lightbulb.implements(lightbulb.SlashCommand)
-    @pass_plugin
-    async def join_command(
-        plugin: PluginType,
-        ctx: BotContext,
-    ) -> None:
-        """Joins the voice channel you are in."""
-        connection_info = await _join_to_author(ctx, plugin.d.lavalink_client)
-
-        if connection_info is not None:
-            await ctx.respond(f"Joined <#{connection_info['channel_id']}>")
-
-    @staticmethod
-    @lightbulb.command(
-        name="leave",
-        description="Leaves the voice channel the bot is in, clearing the queue.",
-        auto_defer=True,
-    )
-    @lightbulb.implements(lightbulb.SlashCommand)
-    @pass_plugin
-    async def leave_command(
-        plugin: PluginType,
-        ctx: BotContext,
-    ) -> None:
-        """Leaves the voice channel the bot is in, clearing the queue."""
-        states = ctx.bot.cache.get_voice_states_view_for_guild(ctx.guild_id)
-
-        # Check if bot in voice channel
-        try:
-            await states.iterator().filter(
-                lambda i: i.user_id == ctx.bot.user_id
-            ).__anext__()
-        except StopAsyncIteration:
-            await ctx.respond("Not in a voice channel")
-            return None
-
-        # Stops the session in Lavalink of the guild
-        try:
-            await plugin.d.lavalink_client.destroy(guild_id=ctx.guild_id)
-        except lavasnek_rs.NetworkError:
-            await ctx.respond("Network error")
-
-        # Leave from channel
-        await ctx.bot.update_voice_state(guild=ctx.guild_id, channel=None)
-        await plugin.d.lavalink_client.wait_for_connection_info_remove(
-            guild_id=ctx.guild_id,
-        )
-
-        # Remove the guild node
-        await plugin.d.lavalink_client.remove_guild_node(guild_id=ctx.guild_id)
-
-        await ctx.respond("Left voice channel")
-
-    @staticmethod
-    @lightbulb.option("query", "Query")
-    @lightbulb.command(
-        name="play",
-        description="Play music",
-        auto_defer=True,
-    )
-    @lightbulb.implements(lightbulb.SlashCommand)
-    @pass_options
-    @pass_plugin
-    async def play_command(
-        plugin: PluginType,
-        ctx: BotContext,
-        query: str,
-    ) -> None:  # TODO
-        if re.match("^https?://.+$", query):
-            result = await plugin.d.track_extractor.extract(query)
-
-            if not isinstance(result, Track):
-                return
-            stream_url = result.stream_url
-        else:
-            return
-
-        connection = plugin.d.lavalink_client.get_guild_gateway_connection_info(
-            guild_id=ctx.guild_id,
-        )
-
-        if connection is None:
-            await _join_to_author(ctx, plugin.d.lavalink_client)  # TODO: tests
-
-        tracks_result = await plugin.d.lavalink_client.get_tracks(query=stream_url)
-
-        if not tracks_result.tracks:
-            await ctx.respond("No found")
-            return
-
-        track = tracks_result.tracks[0]
-
-        try:
-            await plugin.d.lavalink_client.play(
-                guild_id=ctx.guild_id,
-                track=track,
-            ).start()
-        except lavasnek_rs.NoSessionPresent:
-            await ctx.respond("Use join")
-            return
-
-        await ctx.respond("Start playing")
-
-    @staticmethod
-    @lightbulb.option("query", "Query for search")
-    @lightbulb.command(
-        name="search_track",
-        description="Search track",
-        auto_defer=True,
-    )
-    @lightbulb.implements(lightbulb.SlashCommand)
-    @pass_options
-    @pass_plugin
-    async def search_track_command(
-        plugin: PluginType,
-        ctx: BotContext,
-        query: str,
-    ) -> None:
-        async with plugin.d.lyrics_translate_client as client:
-            suggestions = filter(
-                lambda element: element.category == Category.SONGS,
-                await client.search(query)
-            )
-
-            try:
-                suggestion = next(suggestions)
-            except StopIteration:
-                await ctx.respond(DefaultEmbed(description="`No found`"))
-                return
-
-            track_result = await client.get_song_by_url(suggestion.url)
-            await ctx.respond(
-                DefaultEmbed(description="```" + "\n\n".join(track_result.lyrics) + "```"),
-            )
 
     @staticmethod
     async def start_lavalink(
         plugin: PluginType,
         event: hikari.ShardReadyEvent,
     ) -> None:
-        """Event that triggers when the hikari_tools gateway is ready."""
+        """Event that triggers when the hikari gateway is ready."""
+        bot: BaseBot = event.app  # type: ignore
+
         lavalink_client_builder = (
-            # token can be an empty string if you don't want to use lavasnek's lightbulb_tools gateway.
+            # token can be an empty string if you don't want to use lavasnek's lightbulb gateway.
             lavasnek_rs.LavalinkBuilder(bot_id=event.my_user.id, token="")
             .set_host(host=plugin.d.lavalink_config.host)
             .set_password(password=plugin.d.lavalink_config.password)
@@ -239,14 +112,27 @@ class StaticCommands():
 
         lavalink_client_builder.set_start_gateway(False)
 
-        plugin.d.lavalink_client = await lavalink_client_builder.build(EventHandler)
+        lavalink_client = await lavalink_client_builder.build(EventHandler)
+
+        plugin.d.set_lavasnek_player_manager(
+            BasePlayerManager(
+                queue_repository=plugin.d.lavalink_config.queue_repository,
+                player=HikariVoiceLavasnekPlayer(
+                    lavasnek_client=lavalink_client,
+                    bot=bot,
+                )
+            )
+        )
 
     @staticmethod
     async def on_voice_state_update(
         plugin: PluginType,
         event: hikari.VoiceStateUpdateEvent,
     ) -> None:
-        plugin.d.lavalink_client.raw_handle_event_voice_state_update(
+
+        lavasnek_player_manager = plugin.d.get_lavasnek_player_manager()
+
+        lavasnek_player_manager.raw_handle_event_voice_state_update(
             guild_id=event.state.guild_id,
             user_id=event.state.user_id,
             session_id=event.state.session_id,
@@ -260,15 +146,46 @@ class StaticCommands():
     ) -> None:
         assert event.endpoint is not None
 
-        await plugin.d.lavalink_client.raw_handle_event_voice_server_update(
+        lavasnek_player_manager = plugin.d.get_lavasnek_player_manager()
+
+        await lavasnek_player_manager.raw_handle_event_voice_server_update(
             guild_id=event.guild_id,
             endpoint=event.endpoint,
             token=event.token,
         )
 
 
+class StaticCommands():
+    @staticmethod
+    @lightbulb.command(
+        name="play",
+        description="Play music",
+        auto_defer=True,
+    )
+    @lightbulb.implements(lightbulb.SlashCommand)
+    @pass_options
+    @pass_plugin
+    async def play_command(
+        plugin: PluginType,
+        ctx: BotContextType,
+    ) -> None:
+        lavasnek_player_manager = plugin.d.get_lavasnek_player_manager()
+
+        try:
+            await lavasnek_player_manager.play(
+                guild_id=ctx.guild_id,
+                queue_key=ctx.guild_id,
+            )
+        except TrackNotFoundInQueue:
+            await ctx.respond(
+                DefaultEmbed(
+                    title="The queue is empty, add something",
+                )
+            )
+
+
 async def _join_to_author(
-    ctx: BotContext,
+    ctx: BotContextType,
     lavalink_client: LavalinkClient,
 ) -> lavasnek_rs.ConnectionInfo | None:
     """Join the bot to the voice channel where the member is located."""

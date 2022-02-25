@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import (
     Callable,
     Awaitable,
+    Any,
 )
 from mypy_extensions import Arg, VarArg, KwArg
 
@@ -30,7 +31,7 @@ def pass_options(
                 await ctx.respond(text)
     """
 
-    async def decorated(ctx: lightbulb.Context) -> None:
-        return await func(ctx, **ctx.raw_options)
+    async def decorated(ctx: lightbulb.Context, *args: Any, **kwargs: Any) -> None:
+        return await func(ctx, *ctx.raw_options.values(), *args, **kwargs)
 
     return decorated

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import lightbulb
 
-from plugin_manager import PluginManager
-from music_bot.tools.lightbulb_tools import pass_options
+from lightbulb_plugin_manager import PluginManager
+from music_bot.allocation.tools.lightbulb import pass_options
 
 
 class HelpPluginManager(PluginManager):

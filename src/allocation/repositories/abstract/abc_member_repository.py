@@ -1,6 +1,6 @@
 import abc
 
-from ..models import Member
+from allocation.models import Member
 
 
 class ABCMemberRepository(abc.ABC):

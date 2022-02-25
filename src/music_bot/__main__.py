@@ -25,7 +25,9 @@ from music_source.extractor import (
     YandexMusicPlaylistExtractor,
 )
 
-from tools.lightbulb import BaseBot
+from allocation import DictQueueRepository
+from music_bot.allocation.tools.lightbulb import BaseBot
+from music_bot.allocation.tools.yandex_music import YandexMusicAPITokenAuthModule
 from music_bot.extensions import (
     MiscPluginManager,
     HelpPluginManager,
@@ -33,7 +35,6 @@ from music_bot.extensions import (
     PluginDataStore,
     LavalinkConfig,
 )
-from music_bot.injectors import YandexMusicAPITokenAuthModule
 
 
 ######### Logging #########
@@ -97,12 +98,16 @@ def main() -> None:
         MusicPluginManager(
             "Music",
             data_store=PluginDataStore(
-                lavalink_config=LavalinkConfig(host="127.0.0.1", password="TheCat"),
-                track_extractor=TrackExtractor([
-                    YandexMusicPlaylistExtractor(yandex_music_injector.get(YandexMusicClient)),
-                    YandexMusicAlbumExtractor(yandex_music_injector.get(YandexMusicClient)),
-                    YandexMusicTrackExtractor(yandex_music_injector.get(YandexMusicClient)),
-                ]),
+                lavalink_config=LavalinkConfig(
+                    host="127.0.0.1",
+                    password="TheCat",
+                    track_extractor=TrackExtractor([
+                        YandexMusicPlaylistExtractor(yandex_music_injector.get(YandexMusicClient)),
+                        YandexMusicAlbumExtractor(yandex_music_injector.get(YandexMusicClient)),
+                        YandexMusicTrackExtractor(yandex_music_injector.get(YandexMusicClient)),
+                    ]),
+                    queue_repository=DictQueueRepository(),
+                ),
                 lyrics_translate_client=lyrics_translate_injector.get(LyricsTranslateClient),
             )
         ).get_plugin()

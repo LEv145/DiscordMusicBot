@@ -8,7 +8,7 @@ ObjectType = typing.TypeVar("ObjectType")
 
 async def async_wait_until(
     condition: typing.Callable[[ObjectType], bool],
-    function: typing.Callable[..., typing.Coroutine[typing.Any, typing.Any, ObjectType]],
+    function: typing.Callable[..., typing.Awaitable[ObjectType]],
     timeout: int,
     period: float = 0.25,
     *args: typing.Any,
@@ -16,10 +16,14 @@ async def async_wait_until(
 ) -> ObjectType:
     """Asyncio wait until timeout expired."""
     end_time = time.time() + timeout
-    while time.time() < end_time:
+    while True:
         result = await function(*args, **kwargs)
         if condition(result):
             return result
+
+        if time.time() >= end_time:
+            break
+
         await asyncio.sleep(period)
     raise TimeoutExpired
 

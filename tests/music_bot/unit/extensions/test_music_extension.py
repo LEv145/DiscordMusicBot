@@ -1,31 +1,53 @@
 import unittest
-from unittest.mock import MagicMock, Mock, AsyncMock
+from unittest.mock import Mock, AsyncMock
 
+from src.music_bot.extensions.music_extension import (
+    StaticCommands,
+    DefaultEmbed,
+)
+from allocation import (
+    Track,
+)
 
 import lightbulb
 
 
 class TestCommands(unittest.IsolatedAsyncioTestCase):
     async def test_play(self) -> None:
-        play_command = MagicMock()
+        play_command = StaticCommands.play_command
+
 
         # Test with empty queue
-        plugin_mock = AsyncMock(spec=lightbulb.Plugin)
-        plugin_mock.d.queue = MagicMock(**{"empty": Mock(return_value=True)})
+        plugin_mock = AsyncMock(
+            lightbulb.Plugin,
+            **{"d.queue.get_nowait": AsyncMock(return_value=None)},
+        )
+        ctx_mock = AsyncMock(
+            lightbulb.Context,
+            **{"command.plugin": plugin_mock},
+        )
 
-        ctx_mock = AsyncMock(spec=lightbulb.Context)
+        await play_command(ctx_mock)
 
-        play_command(plugin_mock, ctx_mock)
+        ## Call once with `DefaultEmbed` type
+        ctx_mock.respond.assert_awaited_once()
+        self.assertIsInstance(ctx_mock.respond.await_args.args[0], DefaultEmbed)
 
-        ctx_mock.respond.assert_awaited_once()  # Respond the queue is empty
 
         # Test with no empty queue
-        plugin_mock = AsyncMock(spec=lightbulb.Plugin)
-        plugin_mock.d.queue = MagicMock(
-            **{
-                "empty": Mock(return_value=False),
-                "get_nowait": Mock(return_value=[MagicMock(), MagicMock()]),
-            },
+        # Test with empty queue
+        plugin_mock = AsyncMock(
+            lightbulb.Plugin,
+            **{"d.queue.get_nowait": AsyncMock(return_value=[Mock(Track)])},
         )
+        ctx_mock = AsyncMock(
+            lightbulb.Context,
+            **{"command.plugin": plugin_mock},
+        )
+
+        await play_command(ctx_mock)
+
+        plugin_mock.d._lavasnek_client.play.assert_called_once()
+
 
 

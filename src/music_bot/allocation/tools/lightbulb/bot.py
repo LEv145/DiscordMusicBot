@@ -1,3 +1,5 @@
+# TODO?: Move to models
+
 from __future__ import annotations
 
 import typing
@@ -40,3 +42,10 @@ class BaseBot(lightbulb.BotApp):
             raise RuntimeError("The bot is not yet initialized, me is unavailable.")
 
         return me
+
+
+# noinspection PyAbstractClass
+class BotContextType(lightbulb.Context):
+    bot: BaseBot
+    guild: hikari.Guild
+    guild_id: hikari.Snowflakeish
