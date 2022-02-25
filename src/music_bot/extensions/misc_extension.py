@@ -3,7 +3,7 @@ from __future__ import annotations
 import lightbulb
 from lightbulb_plugin_manager import PluginManager
 
-from music_bot.allocation.tools import DefaultEmbed
+from music_bot.allocation.tools.hikari import DefaultEmbed
 
 
 class MiscPluginManager(PluginManager):

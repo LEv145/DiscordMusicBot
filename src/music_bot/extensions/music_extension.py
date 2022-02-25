@@ -5,22 +5,22 @@ import logging
 from dataclasses import dataclass
 
 import hikari
-import lightbulb
 import lavasnek_rs
+import lightbulb
 from lightbulb_plugin_manager import PluginManager, pass_plugin
+from allocation.repositories import ABCQueueRepository
 
 from music_bot.allocation.player_managers import (
     BasePlayerManager,
     TrackNotFoundInQueue,
 )
 from music_bot.allocation.tools.lavasnek import HikariVoiceLavasnekPlayer
-from allocation.abс_repositories import ABCQueueRepository
 from music_bot.allocation.tools.lightbulb import pass_options
 from music_bot.utils.general import (
     async_wait_until,
     TimeoutExpired,
 )
-from music_bot.allocation.tools import DefaultEmbed
+from music_bot.allocation.tools.hikari import DefaultEmbed
 
 
 if typing.TYPE_CHECKING:

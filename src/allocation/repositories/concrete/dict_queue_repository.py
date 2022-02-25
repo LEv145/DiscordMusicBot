@@ -1,4 +1,4 @@
-from allocation.abс_repositories import ABCQueueRepository
+from allocation.repositories import ABCQueueRepository
 from allocation.models import Track
 
 

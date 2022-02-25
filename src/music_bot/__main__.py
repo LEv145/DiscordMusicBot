@@ -13,6 +13,7 @@ from lyricstranslate import (
     LyricsTranslateModule,
     LyricsTranslateClient,
 )
+from allocation.repositories import DictQueueRepository
 
 from music_source.clients import (
     YandexMusicClient,
@@ -25,7 +26,6 @@ from music_source.extractor import (
     YandexMusicPlaylistExtractor,
 )
 
-from allocation import DictQueueRepository
 from music_bot.allocation.tools.lightbulb import BaseBot
 from music_bot.allocation.tools.yandex_music import YandexMusicAPITokenAuthModule
 from music_bot.extensions import (

@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-import typing
 import abc
 
-
-if typing.TYPE_CHECKING:
-    from allocation.models import Track
+from allocation.models import Track
 
 
 class ABCQueueRepository(abc.ABC):

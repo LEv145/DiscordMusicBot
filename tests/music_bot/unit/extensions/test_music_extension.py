@@ -5,11 +5,9 @@ from src.music_bot.extensions.music_extension import (
     StaticCommands,
     DefaultEmbed,
 )
-from allocation import (
-    Track,
-)
 
 import lightbulb
+from allocation.models import Track
 
 
 class TestCommands(unittest.IsolatedAsyncioTestCase):

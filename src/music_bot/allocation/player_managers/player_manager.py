@@ -1,4 +1,4 @@
-from allocation.abс_repositories import ABCQueueRepository
+from allocation.repositories import ABCQueueRepository
 
 from music_bot.allocation.tools.lavasnek.lavasnek_player import HikariVoiceLavasnekPlayer
 
