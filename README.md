@@ -1,8 +1,6 @@
 # DiscordMusicBot
 
 
-Project: `https://www.figma.com/file/kkUqe75Yc6wUSNeYR2hOtL/DiscordMusicBotRelease`
-
 Start bot:
 ```
 poetry run music_bot
