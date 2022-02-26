@@ -1,7 +1,7 @@
 import time
 from unittest import IsolatedAsyncioTestCase
 
-from music_bot.utils.general import async_wait_until, TimeoutExpired
+from music_bot.utils.asyncio import async_wait_until, TimeoutExpired
 
 
 class TestUtils(IsolatedAsyncioTestCase):
@@ -19,7 +19,7 @@ class TestUtils(IsolatedAsyncioTestCase):
                 period=1,
                 key=0,
             )
-        self.assertTrue(2.5 <= time.time() - start_time <= 3.5)
+        self.assertTrue(2.5 <= time.time() - start_time <= 3.5)  # TODO: Better time tests
 
         # Test result
         self.assertEqual(
