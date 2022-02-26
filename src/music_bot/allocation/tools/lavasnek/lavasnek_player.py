@@ -2,7 +2,7 @@ from hikari import GatewayBot
 from lavasnek_rs import Lavalink, ConnectionInfo
 from allocation.models import Track
 
-from music_bot.utils.general import async_wait_until
+from music_bot.utils.asyncio import async_wait_until
 
 
 class HikariVoiceLavasnekPlayer():

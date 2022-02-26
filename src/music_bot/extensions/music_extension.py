@@ -16,7 +16,7 @@ from music_bot.allocation.player_managers import (
 )
 from music_bot.allocation.tools.lavasnek import HikariVoiceLavasnekPlayer
 from music_bot.allocation.tools.lightbulb import pass_options
-from music_bot.utils.general import (
+from music_bot.utils.asyncio import (
     async_wait_until,
     TimeoutExpired,
 )
@@ -48,7 +48,7 @@ class PluginDataStore(lightbulb.utils.DataStore):
         self,
         lavalink_config: LavalinkConfig,
         lyrics_translate_client: LyricsTranslateClient,
-    ):
+    ) -> None:
         self.lavalink_config = lavalink_config
         self.lyrics_translate_client = lyrics_translate_client
 
