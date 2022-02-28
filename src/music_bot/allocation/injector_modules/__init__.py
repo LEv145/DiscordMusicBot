@@ -1,4 +1,4 @@
-from .yandex_music_module import (
+from .yandex_music import (
     YandexMusicAPITokenAuthModule,
 )
 

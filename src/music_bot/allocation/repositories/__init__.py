@@ -6,10 +6,20 @@ from .abstract import (
 from .concrete import (
     DictQueueRepository,
 )
+from .models import (
+    Guild,
+    Lang,
+    Member,
+    Track,
+)
 
 __all__ = [
     "ABCGuildRepository",
     "ABCMemberRepository",
     "ABCQueueRepository",
     "DictQueueRepository",
+    "Guild",
+    "Lang",
+    "Member",
+    "Track",
 ]

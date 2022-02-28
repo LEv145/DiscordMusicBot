@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 from music_bot.allocation.player_managers import (
     BasePlayerManager,
-    TrackNotFoundInQueue,
+    TrackNotFoundInQueueError,
 )
 
 
@@ -11,10 +11,12 @@ class TestBasePlayerManager(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
         self._queue_repository_mock = AsyncMock()
         self._player_mock = AsyncMock()
+        self._track_extractor = AsyncMock()
 
         self._player_manager = BasePlayerManager(
             queue_repository=self._queue_repository_mock,
             player=self._player_mock,
+            track_extractor=self._track_extractor,
         )
 
     async def test_play(self) -> None:
@@ -41,7 +43,7 @@ class TestBasePlayerManager(unittest.IsolatedAsyncioTestCase):
         self._queue_repository_mock.get_nowait = AsyncMock(
             return_value=None,
         )
-        with self.assertRaises(TrackNotFoundInQueue):
+        with self.assertRaises(TrackNotFoundInQueueError):
             await self._player_manager.play(
                 guild_id=867344761970229258,
                 queue_key=501089151089770517,

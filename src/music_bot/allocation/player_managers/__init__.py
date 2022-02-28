@@ -1,7 +1,13 @@
 from .player_manager import (
     BasePlayerManager,
     PlayerManagerError,
-    TrackNotFoundInQueue,
+    TrackNotFoundInQueueError,
+    UnsupportedTrackURLError,
 )
 
-__all__ = ["BasePlayerManager", "PlayerManagerError", "TrackNotFoundInQueue"]
+__all__ = [
+    "BasePlayerManager",
+    "PlayerManagerError",
+    "TrackNotFoundInQueueError",
+    "UnsupportedTrackURLError",
+]

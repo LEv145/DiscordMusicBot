@@ -7,28 +7,26 @@ from dataclasses import dataclass
 import hikari
 import lavasnek_rs
 import lightbulb
+from modules.lavasnek_player import HikariVoiceLavasnekPlayer
+from music_bot.allocation.repositories import ABCQueueRepository
 from lightbulb_plugin_manager import PluginManager, pass_plugin
-from allocation.repositories import ABCQueueRepository
 
 from music_bot.allocation.player_managers import (
     BasePlayerManager,
-    TrackNotFoundInQueue,
+    TrackNotFoundInQueueError,
+    UnsupportedTrackURLError,
 )
-from music_bot.allocation.tools.lavasnek import HikariVoiceLavasnekPlayer
-from music_bot.allocation.tools.lightbulb import pass_options
-from music_bot.utils.asyncio import (
-    async_wait_until,
-    TimeoutExpired,
-)
-from music_bot.allocation.tools.hikari import DefaultEmbed
+from music_bot.allocation.music_source_embed_builder import MusicSourceEmbedBuilder
+from music_bot.tools import pass_options
+from music_bot.allocation.default_embed import DefaultEmbed
+
 
 
 if typing.TYPE_CHECKING:
-    from music_bot.allocation.tools.lightbulb import BotContextType, BaseBot
+    from music_bot.tools import BotContextType, BaseBot
 
     from lyricstranslate import LyricsTranslateClient
     from music_source.extractor import TrackExtractor
-    from lavasnek_rs import Lavalink as LavalinkClient
 
 
 _log = logging.getLogger(__name__)
@@ -49,6 +47,8 @@ class PluginDataStore(lightbulb.utils.DataStore):
         lavalink_config: LavalinkConfig,
         lyrics_translate_client: LyricsTranslateClient,
     ) -> None:
+        super().__init__()
+
         self.lavalink_config = lavalink_config
         self.lyrics_translate_client = lyrics_translate_client
 
@@ -56,7 +56,7 @@ class PluginDataStore(lightbulb.utils.DataStore):
 
     def get_lavasnek_player_manager(self) -> BasePlayerManager:
         if self._lavasnek_player_manager is None:
-            raise RuntimeError("Lavasnek player is not registered")
+            raise RuntimeError("Lavasnek lavasnek_player is not registered")
 
         return self._lavasnek_player_manager
 
@@ -100,7 +100,7 @@ class MusicPluginManager(PluginManager):
         plugin: PluginType,
         event: hikari.ShardReadyEvent,
     ) -> None:
-        """Event that triggers when the hikari gateway is ready."""
+        """Event that triggers when the default_embed gateway is ready."""
         bot: BaseBot = event.app  # type: ignore
 
         lavalink_client_builder = (
@@ -120,7 +120,8 @@ class MusicPluginManager(PluginManager):
                 player=HikariVoiceLavasnekPlayer(
                     lavasnek_client=lavalink_client,
                     bot=bot,
-                )
+                ),
+                track_extractor=plugin.d.lavalink_config.track_extractor,
             )
         )
 
@@ -129,7 +130,6 @@ class MusicPluginManager(PluginManager):
         plugin: PluginType,
         event: hikari.VoiceStateUpdateEvent,
     ) -> None:
-
         lavasnek_player_manager = plugin.d.get_lavasnek_player_manager()
 
         lavasnek_player_manager.raw_handle_event_voice_state_update(
@@ -163,7 +163,6 @@ class StaticCommands():
         auto_defer=True,
     )
     @lightbulb.implements(lightbulb.SlashCommand)
-    @pass_options
     @pass_plugin
     async def play_command(
         plugin: PluginType,
@@ -173,71 +172,126 @@ class StaticCommands():
 
         try:
             await lavasnek_player_manager.play(
-                guild_id=ctx.guild_id,
                 queue_key=ctx.guild_id,
+                guild_id=ctx.guild_id,
             )
-        except TrackNotFoundInQueue:
+        except TrackNotFoundInQueueError:
             await ctx.respond(
                 DefaultEmbed(
                     title="The queue is empty, add something",
-                )
+                ),
             )
+        else:
+            await ctx.respond(DefaultEmbed(title="Starting playing..."))
 
-
-async def _join_to_author(
-    ctx: BotContextType,
-    lavalink_client: LavalinkClient,
-) -> lavasnek_rs.ConnectionInfo | None:
-    """Join the bot to the voice channel where the member is located."""
-    states = ctx.bot.cache.get_voice_states_view_for_guild(ctx.guild_id)
-
-    # Check if author in voice channel
-    try:
-        author_voice_state = await states.iterator().filter(
-            lambda i: i.user_id == ctx.author.id
-        ).__anext__()
-    except StopAsyncIteration:
-        await ctx.respond(DefaultEmbed(description="You're not on the music channel(´• ω •)"))
-        return None
-
-    # Check if bot is already connected to user channel
-    try:
-        await states.iterator().filter(
-            lambda i: (
-                i.user_id == ctx.bot.user_id and
-                i.channel_id == author_voice_state.channel_id
-            )
-        ).__anext__()
-    except StopAsyncIteration:
-        ...
-    else:
-        await ctx.respond(DefaultEmbed(description="I'm already connected!!1!OwO"))
-        return None
-
-    # Connect to channel
-    await ctx.bot.update_voice_state(
-        guild=ctx.guild_id,
-        channel=author_voice_state.channel_id,
-        self_deaf=True,
+    @staticmethod
+    @lightbulb.option(
+        "query",
+        "Query of track",
     )
+    @lightbulb.command(
+        name="add",
+        description="Add track to queue",
+        auto_defer=True,
+    )
+    @lightbulb.implements(lightbulb.SlashCommand)
+    @pass_options
+    @pass_plugin
+    async def add_command(
+        plugin: PluginType,
+        ctx: BotContextType,
+        query: str,
+    ) -> None:
+        lavasnek_player_manager = plugin.d.get_lavasnek_player_manager()
 
-    try:
-        connection_info: lavasnek_rs.ConnectionInfo = await async_wait_until(
-            condition=lambda i: i["channel_id"] == author_voice_state.channel_id,
-            function=lavalink_client.wait_for_full_connection_info_insert,
-            timeout=3,
+        try:
+            await lavasnek_player_manager.add_track(
+                queue_key=ctx.guild_id,
+                query=query,
+            )
+        except UnsupportedTrackURLError:
+            await ctx.respond(
+                DefaultEmbed(
+                    title="Track url is not supported",
+                ),
+            )
+        else:
+            await ctx.respond(
+                DefaultEmbed(
+                    title="Track url successfully added!",
+                ),
+            )
+
+    @staticmethod
+    @lightbulb.command(
+        name="current_track",
+        description="What's the current track?",
+        auto_defer=True,
+    )
+    @lightbulb.implements(lightbulb.SlashCommand)
+    @pass_plugin
+    async def current_track_command(
+        plugin: PluginType,
+        ctx: BotContextType,
+    ) -> None:
+        lavasnek_player_manager = plugin.d.get_lavasnek_player_manager()
+
+        current_track = await lavasnek_player_manager.get_current_track(
             guild_id=ctx.guild_id,
         )
-    except (TimeoutError, TimeoutExpired):
-        # Bot cannot connect
-        await ctx.respond(
-            "I was unable to connect to the voice channel, maybe missing permissions¯\\_(ツ)_/¯"
-        )
-        return None
 
-    await lavalink_client.create_session(connection_info)
+        embed_builder = MusicSourceEmbedBuilder(current_track)
+        await ctx.respond(embed=embed_builder.get_embed())
 
-    return connection_info
+
+    @staticmethod
+    @lightbulb.command(
+        name="join",
+        description="Join to music channel!",
+        auto_defer=True,
+    )
+    @lightbulb.implements(lightbulb.SlashCommand)
+    @pass_plugin
+    async def join_command(
+        plugin: PluginType,
+        ctx: BotContextType,
+    ) -> None:
+        lavasnek_player_manager = plugin.d.get_lavasnek_player_manager()
+
+        states = ctx.bot.cache.get_voice_states_view_for_guild(ctx.guild_id)
+
+        # Check if author in voice channel
+        try:
+            author_voice_state = await states.iterator().filter(
+                lambda i: i.user_id == ctx.author.id
+            ).__anext__()
+        except StopAsyncIteration:
+            await ctx.respond(DefaultEmbed(description="You're not on the music channel(´• ω •)"))
+            return None
+
+        # Check if bot is already connected to user channel
+        try:
+            await states.iterator().filter(
+                lambda i: (
+                    i.user_id == ctx.bot.user_id and
+                    i.channel_id == author_voice_state.channel_id
+                )
+            ).__anext__()
+        except StopAsyncIteration:
+            ...  # TODO
+        else:
+            await ctx.respond(DefaultEmbed(description="I'm already connected!!1!OwO"))
+            return None
+
+        try:
+            connection_info = await lavasnek_player_manager.join(
+                guild_id=ctx.guild_id,
+                channel_id=author_voice_state.channel_id,
+            )
+        except Exception:
+            ...  # TODO
+
+        await ctx.respond(f"Joined <#{connection_info['channel_id']}>")
 
 
 class EventHandler():

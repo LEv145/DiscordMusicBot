@@ -7,7 +7,7 @@ from src.music_bot.extensions.music_extension import (
 )
 
 import lightbulb
-from allocation.models import Track
+from music_bot.allocation.repositories.models import Track
 
 
 class TestCommands(unittest.IsolatedAsyncioTestCase):

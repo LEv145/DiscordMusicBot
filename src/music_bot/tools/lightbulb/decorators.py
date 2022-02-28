@@ -4,15 +4,20 @@ from typing import (
     Callable,
     Awaitable,
     Any,
+    TypeVar,
 )
-from mypy_extensions import Arg, VarArg, KwArg
+from mypy_extensions import VarArg, KwArg
 
 import lightbulb
 
 
-def pass_options(
-    func: Callable[[Arg(lightbulb.Context), VarArg(), KwArg()], Awaitable[None]],
-) -> Callable[[lightbulb.Context], Awaitable[None]]:
+PluginFunctionType = TypeVar(
+    "PluginFunctionType",
+    bound=Callable[[lightbulb.Context, VarArg(), KwArg()], Awaitable[None]],
+)
+
+
+def pass_options(function: PluginFunctionType) -> PluginFunctionType:
     """
     First order decorator that causes the decorated command callback function
     to have all options provided by the context passed as **keyword** arguments
@@ -32,6 +37,6 @@ def pass_options(
     """
 
     async def decorated(ctx: lightbulb.Context, *args: Any, **kwargs: Any) -> None:
-        return await func(ctx, *ctx.raw_options.values(), *args, **kwargs)
+        await function(ctx, *ctx.raw_options.values(), *args, **kwargs)
 
     return decorated

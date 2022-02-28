@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import AsyncMock, MagicMock
 
-from music_bot.allocation.tools.lavasnek.lavasnek_player import (
+from modules.lavasnek_player import (
     HikariVoiceLavasnekPlayer,
     GatewayBot,
     TracksNoFound,
@@ -20,7 +20,7 @@ class TestHikariVoiceLavasnekPlayer(unittest.IsolatedAsyncioTestCase):
 
 
     async def test_connect_to_channel(self) -> None:
-        await self.player.connect_to_channel(
+        await self.player._connect_to_channel(
             guild_id=867344761970229258,
             channel_id=941028651057709057,
         )
@@ -37,7 +37,7 @@ class TestHikariVoiceLavasnekPlayer(unittest.IsolatedAsyncioTestCase):
         self.mock_lavasnek_client.wait_for_full_connection_info_insert = (
             AsyncMock(return_value=connection_info_mock)
         )
-        result = await self.player.get_channel_connection_info(
+        result = await self.player._get_channel_connection_info(
             guild_id=867344761970229258,
             channel_id=941028651057709057,
             timeout=0,
@@ -45,8 +45,8 @@ class TestHikariVoiceLavasnekPlayer(unittest.IsolatedAsyncioTestCase):
         self.assertIs(result, connection_info_mock)
 
     async def test_join(self) -> None:
-        self.player.connect_to_channel = AsyncMock()
-        self.player.get_channel_connection_info = AsyncMock()
+        self.player._connect_to_channel = AsyncMock()
+        self.player._get_channel_connection_info = AsyncMock()
 
         await self.player.join(
             guild_id=867344761970229258,
@@ -54,11 +54,11 @@ class TestHikariVoiceLavasnekPlayer(unittest.IsolatedAsyncioTestCase):
             timeout=2,
         )
 
-        self.player.connect_to_channel.assert_called_once_with(
+        self.player._connect_to_channel.assert_called_once_with(
             guild_id=867344761970229258,
             channel_id=941028651057709057,
         )
-        self.player.get_channel_connection_info.assert_called_once_with(
+        self.player._get_channel_connection_info.assert_called_once_with(
             guild_id=867344761970229258,
             channel_id=941028651057709057,
             timeout=2,
@@ -66,10 +66,12 @@ class TestHikariVoiceLavasnekPlayer(unittest.IsolatedAsyncioTestCase):
 
     async def test_stop(self) -> None:
         self.mock_lavasnek_client.stop = AsyncMock()
+        self.player._current_track = "Any value"
 
         await self.player.stop(guild_id=867344761970229258)
 
         self.mock_lavasnek_client.stop.assert_called_once_with(867344761970229258)
+        self.assertIsNone(self.player._current_track)
 
     async def test_pause(self) -> None:
         self.mock_lavasnek_client.pause = AsyncMock()
@@ -111,22 +113,22 @@ class TestHikariVoiceLavasnekPlayer(unittest.IsolatedAsyncioTestCase):
         )
 
     async def test_play(self) -> None:
-        track_mock = MagicMock()
         self.mock_lavasnek_client.play = MagicMock(
             **{"return_value.start": AsyncMock()}
         )
 
         # Test normal
-        self.mock_lavasnek_client.get_tracks.return_value = MagicMock()
+        tracks_result = MagicMock()
+        self.mock_lavasnek_client.get_tracks.return_value = tracks_result
         tracks_result_mock = self.mock_lavasnek_client.get_tracks.return_value
 
         await self.player.play(
             guild_id=867344761970229258,
-            track=track_mock,
+            query="test_query",
         )
 
         self.mock_lavasnek_client.get_tracks.assert_called_once_with(
-            track_mock.url,
+            "test_query",
         )
         self.mock_lavasnek_client.play.assert_called_once_with(
             guild_id=867344761970229258,
@@ -135,7 +137,10 @@ class TestHikariVoiceLavasnekPlayer(unittest.IsolatedAsyncioTestCase):
         self.mock_lavasnek_client.play.return_value\
             .start.assert_awaited_once_with()
 
-        self.assertEqual(self.player._current_track, track_mock)
+        self.assertEqual(
+            self.player._current_track,
+            tracks_result.tracks[0],
+        )
 
 
         # Test TracksNoFound
@@ -146,5 +151,5 @@ class TestHikariVoiceLavasnekPlayer(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(TracksNoFound):
             await self.player.play(
                 guild_id=867344761970229258,
-                track=track_mock,
+                query="test_query",
             )

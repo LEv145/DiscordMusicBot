@@ -2,7 +2,7 @@ from .checks import (
     check_author_in_voice_channel,
 )
 from .decorators import pass_options
-from .bot import BaseBot, BotContextType
+from music_bot.allocation.base_bot.bot import BaseBot, BotContextType
 
 
 __all__ = [

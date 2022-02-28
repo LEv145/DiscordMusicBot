@@ -1,6 +1,6 @@
 import abc
 
-from allocation.models import Guild
+from ..models import Guild
 
 
 class ABCGuildRepository(abc.ABC):
